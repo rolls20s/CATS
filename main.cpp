@@ -2,13 +2,14 @@
 #include "helpers.cpp"
 #include "parser.cpp"
 
+
 int main( int arg_count, char *args[])
 {
     /** Initialize log **/
     init_log();
 
     int err_code = 0;
-    std::string source_path; // Holds path to source data
+    string source_path; // Holds path to source data
 
     /******* Process command-line arguments *******/
     err_code = get_args( arg_count, args, source_path );

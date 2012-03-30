@@ -11,7 +11,7 @@ ToDo: Base the log preferences off of
 ******************************************/
 void init_log()
 {
-    std::ofstream logfile;
+    ofstream logfile;
 
     logfile.open( LOG_LOCATION ); // open file
 
@@ -22,7 +22,7 @@ void init_log()
     }
     else
     {
-        std::cerr << "Problem opening log file.\n";
+        cerr << "Problem opening log file.\n";
     }
 }
 
@@ -37,11 +37,11 @@ char log_type: Identifies type of message:
             e - error
             f - fatal error
 ******************************************************/
-void log_msg( const std::string &log_message, const char &log_type )
+void log_msg( const string &log_message, const char &log_type )
 {
-    std::ofstream logfile;
+    ofstream logfile;
 
-    logfile.open( LOG_LOCATION, std::ofstream::app ); // open file
+    logfile.open( LOG_LOCATION, ofstream::app ); // open file
 
     if( logfile.is_open() )
     {
@@ -55,7 +55,7 @@ void log_msg( const std::string &log_message, const char &log_type )
         }
         else // Wrong log_type
         {
-            std::cerr << "Bad log_type in log_msg()\n";
+            cerr << "Bad log_type in log_msg()\n";
         }
 
         /* Write out message to file */
@@ -74,7 +74,7 @@ void log_msg( const std::string &log_message, const char &log_type )
     }
     else
     {
-        std::cerr << "Problem opening log file.\n";
+        cerr << "Problem opening log file.\n";
     }
 }
 
@@ -87,7 +87,7 @@ boost::program_options library.
 char* args[]:  Set of arguments
 int arg_count: Number of arguments
 ************************************/
-int get_args( int arg_count, char *args[], std::string &source_path )
+int get_args( int arg_count, char *args[], string &source_path )
 {
     try
     {
@@ -98,7 +98,7 @@ int get_args( int arg_count, char *args[], std::string &source_path )
 
             ( "help", "Show this help message" )
 
-            ( "source", opts::value<std::string>(), "Set location of source files" )
+            ( "source", opts::value<string>(), "Set location of source files" )
 
         ;
         /********************************************************************/
@@ -110,16 +110,16 @@ int get_args( int arg_count, char *args[], std::string &source_path )
         /******************** PROCESS CUSTOM OPTIONS HERE *********************/
         if( vm.count( "help" ) )
         {
-            std::cout << desc << "\n";
+            cout << desc << "\n";
             return 1;
         }
         if( vm.count( "source" ) )
         {
-            source_path = vm["source"].as<std::string>(); // Return source path
+            source_path = vm["source"].as<string>(); // Return source path
         }
         else // A source is required.
         {
-            std::cout << "No source specified.\n";
+            cout << "No source specified.\n";
             log_msg( "No source specified.", 'f' );
             return 2;
         }
@@ -128,13 +128,13 @@ int get_args( int arg_count, char *args[], std::string &source_path )
     }
     catch( std::exception& e ) // Bad options
     {
-        std::cerr << "Error: " << e.what() << "\n";
+        cerr << "Error: " << e.what() << "\n";
         log_msg( e.what(), 'f');
         return 1;
     }
     catch( ... ) // Something bad happened.
     {
-        std::cerr << "Exception of unknown type!\n";
+        cerr << "Exception of unknown type!\n";
         log_msg( "Something bad happened.", 'e' );
     }
 

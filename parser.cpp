@@ -34,9 +34,9 @@ int Parser::parse_files()
 {
     while( ( entry = readdir( source_dir ) ) != NULL )
     {
-        if( ( std::string( entry->d_name ) != "..") && ( std::string( entry->d_name ) != "." ) )
+        if( ( string( entry->d_name ) != "..") && ( string( entry->d_name ) != "." ) )
         {
-            std::cout << entry->d_name << "\n";
+            cout << entry->d_name << "\n";
         }
     }
 
