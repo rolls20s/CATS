@@ -1,11 +1,25 @@
-#include <iostream>
+#include "main.h"
+#include "helpers.cpp"
 
-//this is a test of a custom code::blocks tool.  safe to ignore
-
-using namespace std;
-
-int main()
+int main( int arg_count, char *args[])
 {
-    cout << "Hello world!" << endl;
+    /** Initialize log **/
+    init_log();
+
+    int err_code = 0;
+    std::string source_path; // Holds path to source data
+
+    /******* Process command-line arguments *******/
+    err_code = get_args( arg_count, args, source_path );
+
+    if( err_code > 0 )
+    {
+        return err_code; // Problem
+    }
+    /**********************************************/
+
+    log_msg( "Source path: " + source_path, 'i' );
+
+
     return 0;
 }
