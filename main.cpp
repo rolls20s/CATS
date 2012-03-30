@@ -23,7 +23,7 @@ int main( int arg_count, char *args[])
     log_msg( "Source path: " + source_path, 'i' );
 
     /******* Process contents of sourse path ******/
-    Parser myParser( source_path.c_str() );
+    Parser myParser( source_path );
     myParser.read_files();
     /**********************************************/
 

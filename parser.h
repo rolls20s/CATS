@@ -5,6 +5,8 @@ class Parser
 {
   public:
 
+    string source_path;
+
     DIR *source_dir;
     struct dirent *entry;
 
@@ -15,7 +17,7 @@ class Parser
     const char *source_path: path to
     source data directory
     *************************************/
-    Parser( const char* );   // constructor
+    Parser( string );   // constructor
 
     ~Parser();  // destructor
 
