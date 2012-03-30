@@ -31,7 +31,7 @@ class Parser
 
     const char *filename: file to parse
     ***********************************/
-    int parse_file( const char* );
+    int parse_file( string );
 
 
     /* Parsing Procedures*/
