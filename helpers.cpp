@@ -138,6 +138,5 @@ int get_args( int arg_count, char *args[], std::string &source_path )
         log_msg( "Something bad happened.", 'e' );
     }
 
-
     return 0;
 }

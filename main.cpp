@@ -1,5 +1,6 @@
 #include "main.h"
 #include "helpers.cpp"
+#include "parser.cpp"
 
 int main( int arg_count, char *args[])
 {
@@ -20,6 +21,9 @@ int main( int arg_count, char *args[])
 
     log_msg( "Source path: " + source_path, 'i' );
 
+    /******* Process contents of sourse path ******/
+    Parser parse( source_path.c_str() );
+    /**********************************************/
 
     return 0;
 }
