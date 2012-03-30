@@ -4,8 +4,11 @@
 Run "cats --help" for usage info.
 
 At this point, the program takes an input argument of the source directory through the --source flag. 
-It opens this directory and reads in the filenames.  Next step is to pass these to a parsing function
+It opens that directory and reads in the filenames.  Next step is to pass these to a parsing function
 that will decide what needs to be changed.  That will be followed by the individual change functions.
+
+It also outputs information and errors to a log file. See log_msg() in helpers.cpp for more info on 
+how to use it.
 
 Some config options are (and will) be temporarily hardcoded in main.h.  Try to keep them there so we
 can later whittle them down by designating them to a config file and/or command arguments.
