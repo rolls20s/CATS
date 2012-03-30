@@ -30,7 +30,7 @@ Parser::~Parser()
     entry = NULL;
 }
 
-int Parser::parse_files()
+int Parser::read_files()
 {
     while( ( entry = readdir( source_dir ) ) != NULL )
     {
@@ -42,3 +42,4 @@ int Parser::parse_files()
 
     return 0;
 }
+

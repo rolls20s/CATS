@@ -19,7 +19,7 @@ class Parser
 
     ~Parser();  // destructor
 
-    int parse_files();
+    int read_files();
 
   private:
 
