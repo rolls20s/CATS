@@ -19,12 +19,9 @@ class Parser
 
     ~Parser();  // destructor
 
+    int parse_files();
+
   private:
-
-
-
-    int open_source_dir( const char* );
-
 
     /**********************************
     Reads in file and calls various
