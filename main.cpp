@@ -24,7 +24,7 @@ int main( int arg_count, char *args[])
 
     /******* Process contents of sourse path ******/
     Parser myParser( source_path );
-    myParser.read_files();
+    myParser.parse_data();
     /**********************************************/
 
     return 0;

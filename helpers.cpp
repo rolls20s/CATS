@@ -67,7 +67,7 @@ void log_msg( const string &log_message, const char &log_type )
         }
         else
         {
-            logfile << "\n";
+            logfile << endl;
         }
 
         logfile.close(); // close file
@@ -110,7 +110,7 @@ int get_args( int arg_count, char *args[], string &source_path )
         /******************** PROCESS CUSTOM OPTIONS HERE *********************/
         if( vm.count( "help" ) )
         {
-            cout << desc << "\n";
+            cout << desc << endl;
             return -1;
         }
         if( vm.count( "source" ) )
@@ -128,7 +128,7 @@ int get_args( int arg_count, char *args[], string &source_path )
     }
     catch( std::exception& e ) // Bad options
     {
-        cerr << "Error: " << e.what() << "\n";
+        cerr << "Error: " << e.what() << endl;
         log_msg( e.what(), 'f');
         return -1;
     }

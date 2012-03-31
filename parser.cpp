@@ -33,10 +33,22 @@ Parser::~Parser()
     entry = NULL;
 }
 
-/***************************************
-Read in files and call parsing function
-****************************************/
-int Parser::read_files()
+/******************************************
+Begin the parsing process and return status
+*******************************************/
+int Parser::parse_data()
+{
+    int ret_val = -1;
+
+    ret_val = read_directory();
+
+    return ret_val;
+}
+
+/****************************************
+Read in files and call file open function
+*****************************************/
+int Parser::read_directory()
 {
     int status;
     struct stat st_buf;
@@ -73,11 +85,10 @@ int Parser::read_files()
                 // ToDo: Pass over unsupported file types
 
 
-
                 /****** Parse  file ***********************************/
                 int ret_val = -1;
 
-                ret_val = parse_file( curr_file_path );
+                ret_val = open_file( curr_file_path );
                 if( ret_val != 0 )
                 {
                     log_msg( "Problem parsing " + curr_file_path, 'e' );
@@ -96,13 +107,16 @@ sanitization routines
 
 string file_name: full path of file to parse
 ********************************************/
-int Parser::parse_file( string file_name )
+int Parser::open_file( string file_name )
 {
-    string line;
+    int ret_val;
+    int line_num = 1; // File line #'s start from 1
+    string ln; // For converting line_num
+    string line; // Holds current line
+
     std::ifstream curr_file;
 
     log_msg( "Opening file " + file_name, 'i' );
-
 
     /** Open file **/
     curr_file.open( file_name.c_str() );
@@ -115,12 +129,20 @@ int Parser::parse_file( string file_name )
     /***** Read file in by line *****/
     while( curr_file.good() )
     {
-        std::getline( curr_file, line );
-        cout << line << endl;
+        std::getline( curr_file, line ); // Get next line
 
+        ln = boost::lexical_cast<string>( line_num ); // Convert int to string
+        log_msg( "Processing line " + ln + " of file " + file_name, 'i' );
 
-        // ToDo: parse line and call replacement functions
+        ret_val = parse_line( line ); // Call parser
 
+        if( ret_val != 0 )
+        {
+            log_msg( "Problem parsing line " + ln, 'e' );
+            return -1;
+        }
+
+        line_num++; // Increment line #
     }
     /********************************/
 
@@ -129,5 +151,15 @@ int Parser::parse_file( string file_name )
     log_msg( "Closing file " + file_name, 'i' );
     curr_file.close(); // close file
 
+    return 0;
+}
+
+int Parser::parse_line( string curr_line )
+{
+
+    // ToDo: parse line and call replacement functions
+
+
+    cout << curr_line << endl;
     return 0;
 }

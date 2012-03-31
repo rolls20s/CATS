@@ -1,5 +1,6 @@
-#include <dirent.h> // directory header
-
+#include <dirent.h> // Read directories
+#include <regex> // Regular expressions
+#include <boost/lexical_cast.hpp>
 
 class Parser
 {
@@ -10,31 +11,27 @@ class Parser
     DIR *source_dir;
     struct dirent *entry;
 
-    /************************************
-    Opens source directory and begins
-    reading in files.
 
-    const char *source_path: path to
-    source data directory
-    *************************************/
     Parser( string );   // constructor
-
     ~Parser();  // destructor
-
-    int read_files();
+    int parse_data(); // Inital call to start things rolling
 
   private:
 
-    /**********************************
-    Reads in file and calls various
-    parsing procedures.
-
-    const char *filename: file to parse
-    ***********************************/
-    int parse_file( string );
+    int read_directory(); // Iterate through files in a directory
+    int open_file( string ); // Iterate through lines in a file
+    int parse_line( string ); // Parse each line and call modification procedures
 
 
-    /* Parsing Procedures*/
+    /* Modification procedures */
+
+    // SSN
+
+    // Phone number
+
+    // Address
+
+    // Etc.
 
 };
 
