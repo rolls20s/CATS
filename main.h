@@ -7,7 +7,6 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::cerr;
-using std::ofstream;
 
 // ToDo: Put into a config file or command arguments
 /** Static definitions ****************************/

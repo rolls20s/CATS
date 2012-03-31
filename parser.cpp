@@ -12,6 +12,8 @@ Parser::Parser( string s_p )
     source_dir = NULL;
     entry = NULL;
 
+    log_msg( "Opening directory " + string( source_path ), 'i' );
+
     source_dir = opendir( source_path.c_str() );
 
     if( source_dir == NULL )
@@ -25,6 +27,7 @@ Parser::Parser( string s_p )
 // Destructor
 Parser::~Parser()
 {
+    log_msg( "Closing directory " + string( source_path ), 'i' );
     closedir( source_dir );
     source_dir = NULL;
     entry = NULL;
@@ -53,7 +56,7 @@ int Parser::read_files()
             {
                 perror( "Problem getting file status" );
                 log_msg( "Problem getting file status", 'e' );
-                return 1;
+                return -1;
             }
             /***********************************************/
 
@@ -65,15 +68,21 @@ int Parser::read_files()
             }
             else // Entry is a file
             {
-                log_msg( "Opening file " + curr_file_path, 'i');
 
+
+                // ToDo: Pass over unsupported file types
+
+
+
+                /****** Parse  file ***********************************/
                 int ret_val = -1;
-                ret_val = parse_file( curr_file_path );
 
+                ret_val = parse_file( curr_file_path );
                 if( ret_val != 0 )
                 {
                     log_msg( "Problem parsing " + curr_file_path, 'e' );
                 }
+                /******************************************************/
             }
         }
     }
@@ -89,6 +98,36 @@ string file_name: full path of file to parse
 ********************************************/
 int Parser::parse_file( string file_name )
 {
+    string line;
+    std::ifstream curr_file;
+
+    log_msg( "Opening file " + file_name, 'i' );
+
+
+    /** Open file **/
+    curr_file.open( file_name.c_str() );
+    if( !curr_file.is_open() )
+    {
+        log_msg( "Unable to open " + file_name, 'e');
+        return -1;
+    }
+
+    /***** Read file in by line *****/
+    while( curr_file.good() )
+    {
+        std::getline( curr_file, line );
+        cout << line << endl;
+
+
+        // ToDo: parse line and call replacement functions
+
+    }
+    /********************************/
+
+
+    /** Close file **/
+    log_msg( "Closing file " + file_name, 'i' );
+    curr_file.close(); // close file
 
     return 0;
 }

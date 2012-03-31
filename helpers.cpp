@@ -11,7 +11,7 @@ ToDo: Base the log preferences off of
 ******************************************/
 void init_log()
 {
-    ofstream logfile;
+    std::ofstream logfile;
 
     logfile.open( LOG_LOCATION ); // open file
 
@@ -39,9 +39,9 @@ char log_type: Identifies type of message:
 ******************************************************/
 void log_msg( const string &log_message, const char &log_type )
 {
-    ofstream logfile;
+    std::ofstream logfile;
 
-    logfile.open( LOG_LOCATION, ofstream::app ); // open file
+    logfile.open( LOG_LOCATION, std::ofstream::app ); // open file
 
     if( logfile.is_open() )
     {
@@ -111,7 +111,7 @@ int get_args( int arg_count, char *args[], string &source_path )
         if( vm.count( "help" ) )
         {
             cout << desc << "\n";
-            return 1;
+            return -1;
         }
         if( vm.count( "source" ) )
         {
@@ -130,7 +130,7 @@ int get_args( int arg_count, char *args[], string &source_path )
     {
         cerr << "Error: " << e.what() << "\n";
         log_msg( e.what(), 'f');
-        return 1;
+        return -1;
     }
     catch( ... ) // Something bad happened.
     {

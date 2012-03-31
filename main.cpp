@@ -14,7 +14,7 @@ int main( int arg_count, char *args[])
     /******* Process command-line arguments *******/
     err_code = get_args( arg_count, args, source_path );
 
-    if( err_code > 0 )
+    if( err_code != 0 )
     {
         return err_code; // Problem
     }
