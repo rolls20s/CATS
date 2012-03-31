@@ -1,10 +1,9 @@
 #include "parser.h"
 
 /************************************
-Opens source directory and begins
-reading in files.
+Opens source directory
 
-const char *source_path: path to
+string source_path: path to
 source data directory
 *************************************/
 Parser::Parser( string s_p )
@@ -23,7 +22,7 @@ Parser::Parser( string s_p )
     }
 }
 
-
+// Destructor
 Parser::~Parser()
 {
     closedir( source_dir );
@@ -31,7 +30,9 @@ Parser::~Parser()
     entry = NULL;
 }
 
-
+/***************************************
+Read in files and call parsing function
+****************************************/
 int Parser::read_files()
 {
     int status;
@@ -80,11 +81,14 @@ int Parser::read_files()
     return 0;
 }
 
-int Parser::parse_file( string )
+/*******************************************
+Parse file and call appropriate
+sanitization routines
+
+string file_name: full path of file to parse
+********************************************/
+int Parser::parse_file( string file_name )
 {
 
     return 0;
 }
-
-
-
