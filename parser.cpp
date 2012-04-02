@@ -3,10 +3,9 @@
 /************************************
 Opens source directory
 
-string source_path: path to
-source data directory
+const string s_p: path to source data
 *************************************/
-Parser::Parser( string s_p )
+Parser::Parser( const string &s_p )
 {
     source_path = s_p;
     source_dir = NULL;
@@ -38,7 +37,7 @@ Begin the parsing process and return status
 *******************************************/
 int Parser::parse_data()
 {
-    int ret_val = -1;
+    int ret_val = FAIL;
 
     ret_val = read_directory();
 
@@ -59,16 +58,16 @@ int Parser::read_directory()
         if( ( string( entry->d_name ) != "..") && ( string( entry->d_name ) != "." ) )
         {
             /***** Differentiate directories and files *****/
-            status = -1;
+            status = FAIL;
 
             string curr_file_path = source_path + string( entry->d_name );
 
             status = stat( curr_file_path.c_str(), &st_buf );
-            if( status != 0 )
+            if( status != OK )
             {
                 perror( "Problem getting file status" );
                 log_msg( "Problem getting file status", 'e' );
-                return -1;
+                return FAIL;
             }
             /***********************************************/
 
@@ -86,10 +85,10 @@ int Parser::read_directory()
 
 
                 /****** Parse  file ***********************************/
-                int ret_val = -1;
+                int ret_val = FAIL;
 
                 ret_val = open_file( curr_file_path );
-                if( ret_val != 0 )
+                if( ret_val != OK )
                 {
                     log_msg( "Problem parsing " + curr_file_path, 'e' );
                 }
@@ -98,16 +97,15 @@ int Parser::read_directory()
         }
     }
 
-    return 0;
+    return OK;
 }
 
-/*******************************************
-Parse file and call appropriate
-sanitization routines
+/********************************************
+Open file and call parse_line() on each line
 
-string file_name: full path of file to parse
-********************************************/
-int Parser::open_file( string file_name )
+const string &file_name: full path of file
+*********************************************/
+int Parser::open_file( const string &file_name )
 {
     int ret_val;
     int line_num = 1; // File line #'s start from 1
@@ -123,7 +121,7 @@ int Parser::open_file( string file_name )
     if( !curr_file.is_open() )
     {
         log_msg( "Unable to open " + file_name, 'e');
-        return -1;
+        return FAIL;
     }
 
     /***** Read file in by line *****/
@@ -136,10 +134,10 @@ int Parser::open_file( string file_name )
 
         ret_val = parse_line( line ); // Call parser
 
-        if( ret_val != 0 )
+        if( ret_val != OK )
         {
             log_msg( "Problem parsing line " + ln, 'e' );
-            return -1;
+            return FAIL;
         }
 
         line_num++; // Increment line #
@@ -151,15 +149,65 @@ int Parser::open_file( string file_name )
     log_msg( "Closing file " + file_name, 'i' );
     curr_file.close(); // close file
 
-    return 0;
+    return OK;
 }
 
-int Parser::parse_line( string curr_line )
+/***********************************************
+Calls various functions to change and return
+the input.
+
+const string &curr_line: line of data to parse
+************************************************/
+int Parser::parse_line( string &curr_line )
 {
+    // Scans for birthdates in multiple formats
+    scan_dob( curr_line );
 
-    // ToDo: parse line and call replacement functions
+    // Scans for valid US Social Security Numbers
+    scan_ssn_usa( curr_line );
+
+    // Scans for valid US Telephone Numbers
+    scan_phone_usa( curr_line );
+
+    // Scans for components of US addresses
+    scan_address_usa( curr_line );
+
+    // Scan for Credit Card Numbers in multiple formats
+    scan_ccn( curr_line );
+
+    //cout << curr_line << endl;
+    return OK;
+}
 
 
-    cout << curr_line << endl;
-    return 0;
+/***** Begin scanners *****/
+
+// Scans for birthdates in multiple formats
+int Parser::scan_dob( string &curr_line )
+{
+    return OK;
+}
+
+// Scans for valid US Social Security Numbers
+int Parser::scan_ssn_usa( string &curr_line )
+{
+    return OK;
+}
+
+// Scans for valid US Telephone Numbers
+int Parser::scan_phone_usa( string &curr_line )
+{
+    return OK;
+}
+
+// Scans for components of US addresses
+int Parser::scan_address_usa( string &curr_line )
+{
+    return OK;
+}
+
+// Scan for Credit Card Numbers in multiple formats
+int Parser::scan_ccn( string &curr_line )
+{
+    return OK;
 }
