@@ -160,25 +160,29 @@ const string &curr_line: line of data to parse
 ************************************************/
 int Parser::parse_line( string &curr_line )
 {
-    // Scan for valid US Social Security Numbers
+    // Parse US Social Security Numbers
     module_ssn_usa ssn_parser;
     ssn_parser.scan( curr_line );
 
-    // Scan for valid US Telephone Numbers
+    // Parse US Telephone Numbers
     module_phone_usa phone_parser;
     phone_parser.scan( curr_line );
 
-    // Scans for birthdates in multiple formats
+    // Parse birthdates
 //    module_dob dob_parser;
 //    dob_parser.scan( curr_line );
 
-    // Scans for components of US addresses
+    // Parse US addresses
 //    module_addr_usa addr_parser;
 //    addr_parser.scan( curr_line );
 
-    // Scan for Credit Card Numbers in multiple formats
+    // Parse Credit Card Numbers
 //    module_ccn ccn_parser;
 //    ccn_parser.scan( curr_line );
+
+    // Parse email addresses
+//    module_email email_parser;
+//    email_parser.scan( curr_line );
 
     return OK;
 }
