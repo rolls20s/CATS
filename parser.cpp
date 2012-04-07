@@ -160,11 +160,13 @@ const string &curr_line: line of data to parse
 ************************************************/
 int Parser::parse_line( string &curr_line )
 {
+    // Scan for valid US Social Security Numbers
+    module_ssn_usa ssn_scanner;
+    ssn_scanner.scan( curr_line );
+
+
     // Scans for birthdates in multiple formats
     scan_dob( curr_line );
-
-    // Scans for valid US Social Security Numbers
-    scan_ssn_usa( curr_line );
 
     // Scans for valid US Telephone Numbers
     scan_phone_usa( curr_line );
@@ -184,12 +186,6 @@ int Parser::parse_line( string &curr_line )
 
 // Scans for birthdates in multiple formats
 int Parser::scan_dob( string &curr_line )
-{
-    return OK;
-}
-
-// Scans for valid US Social Security Numbers
-int Parser::scan_ssn_usa( string &curr_line )
 {
     return OK;
 }
