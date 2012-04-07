@@ -1,4 +1,3 @@
-#include <boost/regex.hpp> // Regular expressions
 
 #define OK 0
 #define FAIL -1;
@@ -11,7 +10,6 @@ class module_ssn_usa
     ~module_ssn_usa();  // destructor
 
     int scan( string& );
-    int
 
   private:
 

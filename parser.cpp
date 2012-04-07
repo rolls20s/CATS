@@ -161,49 +161,24 @@ const string &curr_line: line of data to parse
 int Parser::parse_line( string &curr_line )
 {
     // Scan for valid US Social Security Numbers
-    module_ssn_usa ssn_scanner;
-    ssn_scanner.scan( curr_line );
+    module_ssn_usa ssn_parser;
+    ssn_parser.scan( curr_line );
 
+    // Scan for valid US Telephone Numbers
+    module_phone_usa phone_parser;
+    phone_parser.scan( curr_line );
 
     // Scans for birthdates in multiple formats
-    scan_dob( curr_line );
-
-    // Scans for valid US Telephone Numbers
-    scan_phone_usa( curr_line );
+//    module_dob dob_parser;
+//    dob_parser.scan( curr_line );
 
     // Scans for components of US addresses
-    scan_address_usa( curr_line );
+//    module_addr_usa addr_parser;
+//    addr_parser.scan( curr_line );
 
     // Scan for Credit Card Numbers in multiple formats
-    scan_ccn( curr_line );
+//    module_ccn ccn_parser;
+//    ccn_parser.scan( curr_line );
 
-    //cout << curr_line << endl;
-    return OK;
-}
-
-
-/***** Begin scanners *****/
-
-// Scans for birthdates in multiple formats
-int Parser::scan_dob( string &curr_line )
-{
-    return OK;
-}
-
-// Scans for valid US Telephone Numbers
-int Parser::scan_phone_usa( string &curr_line )
-{
-    return OK;
-}
-
-// Scans for components of US addresses
-int Parser::scan_address_usa( string &curr_line )
-{
-    return OK;
-}
-
-// Scan for Credit Card Numbers in multiple formats
-int Parser::scan_ccn( string &curr_line )
-{
     return OK;
 }
