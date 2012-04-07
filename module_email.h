@@ -27,7 +27,7 @@ Scans for Email addresses
 int module_email::scan( string &curr_line )
 {
     /* Regular Expression to match */
-    boost::regex re("");
+    boost::regex re("^((([!#$%&'*+\\-/=?^_`{|}~\\w])|([!#$%&'*+\\-/=?^_`{|}~\\w][!#$%&'*+\\-/=?^_`{|}~\\.\\w]{0,}[!#$%&'*+\\-/=?^_`{|}~\\w]))[@]\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*)$");
 
     /* Iterators */
     boost::sregex_token_iterator it( curr_line.begin(), curr_line.end(), re, 0);

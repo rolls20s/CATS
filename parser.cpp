@@ -181,8 +181,8 @@ int Parser::parse_line( string &curr_line )
 //    ccn_parser.scan( curr_line );
 
     // Parse email addresses
-//    module_email email_parser;
-//    email_parser.scan( curr_line );
+    module_email email_parser;
+    email_parser.scan( curr_line );
 
     return OK;
 }
