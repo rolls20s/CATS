@@ -22,12 +22,12 @@ module_dob::~module_dob()
 }
 
 /*********************************************************************************************
-Scans for birthdays
+Scans for numeric birthdays
 **********************************************************************************************/
 int module_dob::scan( string &curr_line )
 {
     /* Regular Expression to match */
-    boost::regex re("");
+    boost::regex re("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}\\b");
 
     /* Iterators */
     boost::sregex_token_iterator it( curr_line.begin(), curr_line.end(), re, 0);

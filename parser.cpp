@@ -153,13 +153,31 @@ int Parser::open_file( const string &file_name )
 }
 
 /***********************************************
-Calls various functions to change and return
-the input.
+Calls various modules to scan for and change the
+input.
 
 const string &curr_line: line of data to parse
 ************************************************/
 int Parser::parse_line( string &curr_line )
 {
+    /**********************************************************************
+     All modules should follow the same format.
+
+    The module should take up to two parameters:
+
+        1) A pointer to a string containing the line to modify.
+        2) (optionally) A "step" integer value, for tracking multiple lines
+            The value should start from 0 and increase.
+
+            For instance, an address module might have to deal with
+            several lines. The module would be designed to look for a
+            certain kind of line based on if a possible address line
+            was previously found.  If a corresponding match isn't found
+            on subsequent steps, the module should return an indicator
+            that tells the parser to discard the last n lines where n is
+            the current step number.
+    ***********************************************************************/
+
     // Parse US Social Security Numbers
     module_ssn_usa ssn_parser;
     ssn_parser.scan( curr_line );
@@ -169,16 +187,16 @@ int Parser::parse_line( string &curr_line )
     phone_parser.scan( curr_line );
 
     // Parse birthdates
-//    module_dob dob_parser;
-//    dob_parser.scan( curr_line );
+    module_dob dob_parser;
+    dob_parser.scan( curr_line );
 
     // Parse US addresses
 //    module_addr_usa addr_parser;
 //    addr_parser.scan( curr_line );
 
     // Parse Credit Card Numbers
-//    module_ccn ccn_parser;
-//    ccn_parser.scan( curr_line );
+      module_ccn ccn_parser;
+      ccn_parser.scan( curr_line );
 
     // Parse email addresses
     module_email email_parser;
