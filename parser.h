@@ -17,12 +17,12 @@ struct replacement
 /********************************************/
 
 /***** Parsing Modules *****/
-#include "module_ssn_usa.h"     // US Social Security Numbers
-#include "module_phone_usa.h"   // US Telephone Numbers
-#include "module_addr_usa.h"    // US Addresses
-#include "module_dob.h"         // Birthdates
-#include "module_ccn.h"         // Credit Card Numbers
-#include "module_email.h"       // Email Addresses
+#include "Modules/module_ssn_usa.h"     // US Social Security Numbers
+#include "Modules/module_phone_usa.h"   // US Telephone Numbers
+#include "Modules/module_addr_usa.h"    // US Addresses
+#include "Modules/module_dob.h"         // Birthdates
+#include "Modules/module_ccn.h"         // Credit Card Numbers
+#include "Modules/module_email.h"       // Email Addresses
 /***************************/
 
 #define OK 0
