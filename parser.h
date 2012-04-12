@@ -1,9 +1,20 @@
 #include <dirent.h> // Read directories
+#include <vector>
 
 /***** Boost libraries *****/
 #include <boost/regex.hpp> // Regular expressions
 #include <boost/lexical_cast.hpp>
 /***************************/
+
+/*** Structure for replacement data *********/
+struct replacement
+{
+    int begin_pos;  // position in line where replacement starts
+    int end_pos;    // position in line where replacement ends
+
+    string value;   // replacement value
+};
+/********************************************/
 
 /***** Parsing Modules *****/
 #include "module_ssn_usa.h"     // US Social Security Numbers
@@ -21,6 +32,7 @@ class Parser
 {
   public:
 
+
     string source_path;
 
     DIR *source_dir;
@@ -31,6 +43,8 @@ class Parser
     int parse_data(); // Inital call to start things rolling
 
   private:
+
+    std::vector<replacement> replacements; // Init replacement set
 
     int read_directory(); // Iterate through files in a directory
     int open_file( const string& ); // Iterate through lines in a file

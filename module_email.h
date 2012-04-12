@@ -5,10 +5,11 @@ class module_email
     module_email();   // constructor
     ~module_email();  // destructor
 
-    int scan( string& );
+    int scan( string&, std::vector<replacement>& );
 
   private:
 
+    replacement repl_email;
 };
 
 module_email::module_email()
@@ -24,7 +25,7 @@ module_email::~module_email()
 /*********************************************************************************************
 Scans for Email addresses
 **********************************************************************************************/
-int module_email::scan( string &curr_line )
+int module_email::scan( string &curr_line, std::vector<replacement> &email_repls )
 {
     /* Regular Expression to match */
     boost::regex re("((([!#$%&'*+\\-/=?^_`{|}~\\w])|([!#$%&'*+\\-/=?^_`{|}~\\w][!#$%&'*+\\-/=?^_`{|}~\\.\\w]{0,}[!#$%&'*+\\-/=?^_`{|}~\\w]))[@]\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*)");
@@ -38,8 +39,13 @@ int module_email::scan( string &curr_line )
     /* Do matching */
     while( it != end )
     {
-        cout << *it++ << endl;
+        repl_email.begin_pos = it->first - curr_line.begin();
+        repl_email.end_pos = ( it->second - curr_line.begin() ) - 1;
+        repl_email.value = *it++;
+
         count++;
+
+        email_repls.push_back( repl_email );
     }
 
     return OK;

@@ -5,10 +5,11 @@ class module_dob
     module_dob();   // constructor
     ~module_dob();  // destructor
 
-    int scan( string& );
+    int scan( string&, std::vector<replacement>& );
 
   private:
 
+    replacement repl_dob;
 };
 
 module_dob::module_dob()
@@ -24,7 +25,7 @@ module_dob::~module_dob()
 /*********************************************************************************************
 Scans for numeric birthdays
 **********************************************************************************************/
-int module_dob::scan( string &curr_line )
+int module_dob::scan( string &curr_line, std::vector<replacement> &dob_repls )
 {
     /* Regular Expression to match */
     boost::regex re("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}\\b");
@@ -38,8 +39,13 @@ int module_dob::scan( string &curr_line )
     /* Do matching */
     while( it != end )
     {
-        cout << *it++ << endl;
+        repl_dob.begin_pos = it->first - curr_line.begin();
+        repl_dob.end_pos = ( it->second - curr_line.begin() ) - 1;
+        repl_dob.value = *it++;
+
         count++;
+
+        dob_repls.push_back( repl_dob );
     }
 
     return OK;

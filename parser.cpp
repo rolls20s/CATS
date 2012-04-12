@@ -7,6 +7,7 @@ const string s_p: path to source data
 *************************************/
 Parser::Parser( const string &s_p )
 {
+    /** Open directory **/
     source_path = s_p;
     source_dir = NULL;
     entry = NULL;
@@ -52,6 +53,7 @@ int Parser::read_directory()
     int status;
     struct stat st_buf;
 
+    cout << "***** Begin debug output *****" << endl;
 
     while( ( entry = readdir( source_dir ) ) != NULL )
     {
@@ -83,7 +85,6 @@ int Parser::read_directory()
 
                 // ToDo: Pass over unsupported file types
 
-
                 /****** Parse  file ***********************************/
                 int ret_val = FAIL;
 
@@ -96,6 +97,9 @@ int Parser::read_directory()
             }
         }
     }
+
+    cout << "***** End debug output *****" << endl;
+
 
     return OK;
 }
@@ -140,6 +144,14 @@ int Parser::open_file( const string &file_name )
             return FAIL;
         }
 
+        // Debug
+        for(unsigned int i=0;i<replacements.size();i++)
+        {
+            cout << replacements[i].value << endl;
+        }
+
+        replacements.clear();
+
         line_num++; // Increment line #
     }
     /********************************/
@@ -165,8 +177,9 @@ int Parser::parse_line( string &curr_line )
 
     The module should take up to two parameters:
 
-        1) A pointer to a string containing the line to modify.
-        2) (optionally) A "step" integer value, for tracking multiple lines
+        1)  A string containing the line to modify.
+        2)  A vector container of type "replacement"
+        3)  (optionally) A "step" integer value, for tracking multiple lines
             The value should start from 0 and increase.
 
             For instance, an address module might have to deal with
@@ -180,27 +193,27 @@ int Parser::parse_line( string &curr_line )
 
     // Parse US Social Security Numbers
     module_ssn_usa ssn_parser;
-    ssn_parser.scan( curr_line );
+    ssn_parser.scan( curr_line, replacements );
 
     // Parse US Telephone Numbers
     module_phone_usa phone_parser;
-    phone_parser.scan( curr_line );
+    phone_parser.scan( curr_line, replacements );
 
     // Parse birthdates
     module_dob dob_parser;
-    dob_parser.scan( curr_line );
-
-    // Parse US addresses
-//    module_addr_usa addr_parser;
-//    addr_parser.scan( curr_line );
+    dob_parser.scan( curr_line, replacements );
 
     // Parse Credit Card Numbers
-      module_ccn ccn_parser;
-      ccn_parser.scan( curr_line );
+    module_ccn ccn_parser;
+    ccn_parser.scan( curr_line, replacements );
 
     // Parse email addresses
     module_email email_parser;
-    email_parser.scan( curr_line );
+    email_parser.scan( curr_line, replacements );
+
+    // Parse US addresses
+//    module_addr_usa addr_parser;
+//    addr_parser.scan( curr_line, replacements, line_step );
 
     return OK;
 }

@@ -5,9 +5,11 @@ class module_phone_usa
     module_phone_usa();   // constructor
     ~module_phone_usa();  // destructor
 
-    int scan( string& );
+    int scan( string&, std::vector<replacement>& );
 
   private:
+
+    replacement repl_phone;
 
 };
 
@@ -26,7 +28,7 @@ Scans for valid US Telephone Numbers
 
 (Ignores country code).
 **********************************************************************************************/
-int module_phone_usa::scan( string &curr_line )
+int module_phone_usa::scan( string &curr_line, std::vector<replacement> &phone_repls )
 {
     /* Regular Expression to match */
     boost::regex re("(?:\\+?1[-. ]?)?\\(?\\b([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})\\b");
@@ -39,8 +41,15 @@ int module_phone_usa::scan( string &curr_line )
     /* Do matching */
     while( it != end )
     {
-        cout << *it++ << endl;
+        repl_phone.begin_pos = it->first - curr_line.begin();
+        repl_phone.end_pos = ( it->second - curr_line.begin() ) - 1;
+        repl_phone.value = *it++;
+
+        //it++;
+
         count++;
+
+        phone_repls.push_back( repl_phone );
     }
 
     return OK;
