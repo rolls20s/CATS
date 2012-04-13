@@ -26,7 +26,7 @@ module_phone_usa::~module_phone_usa()
 /*********************************************************************************************
 Scans for valid US Telephone Numbers
 
-(Ignores country code).
+ToDo: make sure new value fits specification
 **********************************************************************************************/
 int module_phone_usa::scan( string &curr_line, std::vector<replacement> &phone_repls )
 {
@@ -42,14 +42,14 @@ int module_phone_usa::scan( string &curr_line, std::vector<replacement> &phone_r
     while( it != end )
     {
         repl_phone.begin_pos = it->first - curr_line.begin();
-        repl_phone.end_pos = ( it->second - curr_line.begin() ) - 1;
-        repl_phone.value = *it++;
+        repl_phone.end_pos = it->second - curr_line.begin();
 
-        //it++;
-
-        count++;
+        repl_phone.value = "test";
 
         phone_repls.push_back( repl_phone );
+
+        it++;// increment iterator
+        count++;
     }
 
     return OK;

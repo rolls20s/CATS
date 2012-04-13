@@ -1,22 +1,15 @@
 #include <dirent.h> // Read directories
 #include <vector>
+#include <map>
 
 /***** Boost libraries *****/
 #include <boost/regex.hpp> // Regular expressions
 #include <boost/lexical_cast.hpp>
 /***************************/
 
-/*** Structure for replacement data *********/
-struct replacement
-{
-    int begin_pos;  // position in line where replacement starts
-    int end_pos;    // position in line where replacement ends
-
-    string value;   // replacement value
-};
-/********************************************/
-
 /***** Parsing Modules *****/
+#include "modules.h"
+
 #include "Modules/module_ssn_usa.h"     // US Social Security Numbers
 #include "Modules/module_phone_usa.h"   // US Telephone Numbers
 #include "Modules/module_addr_usa.h"    // US Addresses
@@ -31,7 +24,6 @@ struct replacement
 class Parser
 {
   public:
-
 
     string source_path;
 
@@ -48,7 +40,8 @@ class Parser
 
     int read_directory(); // Iterate through files in a directory
     int open_file( const string& ); // Iterate through lines in a file
-    int parse_line( string& ); // Parse each line and call modification procedures
+    int parse_line( string& ); // Call modules to scan each line and return a stucture containing the changes to make
+    int write_line( string&, const string& ); // Modify the line based on the structure and write it out to a new file
 };
 
 

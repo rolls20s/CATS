@@ -7,6 +7,9 @@ const string s_p: path to source data
 *************************************/
 Parser::Parser( const string &s_p )
 {
+    srand( time(NULL) ); // Generate seed for random gen
+
+
     /** Open directory **/
     source_path = s_p;
     source_dir = NULL;
@@ -137,20 +140,21 @@ int Parser::open_file( const string &file_name )
         log_msg( "Processing line " + ln + " of file " + file_name, 'i' );
 
         ret_val = parse_line( line ); // Call parser
-
         if( ret_val != OK )
         {
             log_msg( "Problem parsing line " + ln, 'e' );
-            return FAIL;
         }
 
-        // Debug
-        for(unsigned int i=0;i<replacements.size();i++)
+        if( replacements.size() != 0 ) // If there are changes to make
         {
-            cout << replacements[i].value << endl;
-        }
+            ret_val = write_line( line, file_name );
+            if( ret_val != OK )
+            {
+                log_msg( "Problem writing line " + ln, 'e' );
+            }
 
-        replacements.clear();
+            replacements.clear(); // Empty the set for the next line
+        }
 
         line_num++; // Increment line #
     }
@@ -212,8 +216,35 @@ int Parser::parse_line( string &curr_line )
     email_parser.scan( curr_line, replacements );
 
     // Parse US addresses
-//    module_addr_usa addr_parser;
-//    addr_parser.scan( curr_line, replacements, line_step );
+/*
+    module_addr_usa addr_parser;
+    addr_parser.scan( curr_line, replacements, line_step );
+*/
+    return OK;
+}
+
+/*********************************************************
+Makes changes to the line based on the scan results and
+writes it out to a new file.
+
+const string &curr_line: line of data that will be changed
+const string &file_name: name of file to write
+**********************************************************/
+int Parser::write_line( string &curr_line, const string &file_name )
+{
+    // Run backwards through the line so we don't have position change issues
+    for( int i = replacements.size()-1; i > -1; i-- )
+    {
+        int length = replacements[i].end_pos - replacements[i].begin_pos; // Length of chars to change
+
+        //cout << "replacing from " << replacements[i].begin_pos << " with length " << length <<  " in file " << file_name << endl;
+        cout << endl << curr_line << endl;
+
+        curr_line.replace( replacements[i].begin_pos, length, replacements[i].value );
+    }
+
+    cout << curr_line << endl;
+
 
     return OK;
 }

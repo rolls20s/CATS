@@ -40,9 +40,11 @@ int module_email::scan( string &curr_line, std::vector<replacement> &email_repls
     while( it != end )
     {
         repl_email.begin_pos = it->first - curr_line.begin();
-        repl_email.end_pos = ( it->second - curr_line.begin() ) - 1;
-        repl_email.value = *it++;
+        repl_email.end_pos = it->second - curr_line.begin();
 
+        repl_email.value = "test";// Replacement value
+
+        it++;// increment iterator
         count++;
 
         email_repls.push_back( repl_email );

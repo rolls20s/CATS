@@ -40,9 +40,11 @@ int module_dob::scan( string &curr_line, std::vector<replacement> &dob_repls )
     while( it != end )
     {
         repl_dob.begin_pos = it->first - curr_line.begin();
-        repl_dob.end_pos = ( it->second - curr_line.begin() ) - 1;
-        repl_dob.value = *it++;
+        repl_dob.end_pos = it->second - curr_line.begin();
 
+        repl_dob.value = "test";// Replacement value
+
+        it++;// increment iterator
         count++;
 
         dob_repls.push_back( repl_dob );
