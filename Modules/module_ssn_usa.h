@@ -51,21 +51,11 @@ int module_ssn_usa::scan( string &curr_line, std::vector<replacement> &ssn_repls
     {
         repl_ssn.begin_pos = it->first - curr_line.begin();
         repl_ssn.end_pos = it->second - curr_line.begin();
+        repl_ssn.value = *it;
 
-        if( repl_map.count( *it ) ) // Have we seen this value before?
-        {
-            repl_ssn.value = repl_map[*it]; // Stay consistent
-        }
-        else
-        {
-            repl_ssn.value = *it;
-            rand_ssn( repl_ssn.value ); // Replace value
-
-            repl_map[*it] = repl_ssn.value;  // Add to consistency tracker
-        }
+        rand_ssn( repl_ssn.value ); // Replace value
 
         ssn_repls.push_back( repl_ssn ); // Add to the list of replacements in this line
-
 
         it++; // increment iterator
         count++;
@@ -80,9 +70,11 @@ random number.
 ****************************************************/
 int module_ssn_usa::rand_ssn( string &format )
 {
-    /* initialize random seed: */
-    stringstream obuffer( stringstream::in | stringstream::out );
-    stringstream ssnBuf( stringstream::in | stringstream::out );
+    string newSsnVal; // Holds the digits for the ssn before formatting
+
+    stringstream oldSsn; // Buffer for current read ssn
+    stringstream obuffer; // Buffer for formatted ssn output
+    stringstream ssnBuf;// Buffer for random ssn ( stringstream::in | stringstream::out );
 
     /**************** Generate digits for ssn ***************/
     // Area Number
@@ -125,13 +117,34 @@ int module_ssn_usa::rand_ssn( string &format )
     ssnBuf << ser_num;
     /********************************************************/
 
+    /*** Check for existing ssn ***/
+    for( unsigned int i = 0; i < repl_ssn.value.length(); i++ )
+    {
+        if( isdigit( repl_ssn.value[i] ) )
+        {
+                oldSsn << repl_ssn.value[i];
+        }
+    }
+
+    if( repl_map.count( oldSsn.str() ) )
+    {
+        newSsnVal = repl_map[oldSsn.str()];
+    }
+    else
+    {
+        newSsnVal = ssnBuf.str();
+        repl_map[oldSsn.str()] = ssnBuf.str();
+    }
+
+    /******************************/
+
     int bufCount = 0; // Track position in new ssn
 
     for( unsigned int i = 0; i < format.length(); i++ )
     {
         if( isdigit( format[i] ) )
         {
-            obuffer << ssnBuf.str()[bufCount]; // output a digit from new ssn value
+            obuffer << newSsnVal[bufCount]; // output a digit from new ssn value
             bufCount++;
         }
         else
