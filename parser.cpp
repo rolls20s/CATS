@@ -60,12 +60,14 @@ int Parser::read_directory()
 
     while( ( entry = readdir( source_dir ) ) != NULL )
     {
-        if( ( string( entry->d_name ) != "..") && ( string( entry->d_name ) != "." ) )
+        string file_name = string( entry->d_name );
+
+        if( ( file_name != "..") && ( file_name != "." ) )
         {
             /***** Differentiate directories and files *****/
             status = FAIL;
 
-            string curr_file_path = source_path + string( entry->d_name );
+            string curr_file_path = source_path + file_name;
 
             status = stat( curr_file_path.c_str(), &st_buf );
             if( status != OK )
@@ -91,7 +93,7 @@ int Parser::read_directory()
                 /****** Parse  file ***********************************/
                 int ret_val = FAIL;
 
-                ret_val = open_file( curr_file_path );
+                ret_val = open_file( curr_file_path, file_name );
                 if( ret_val != OK )
                 {
                     log_msg( "Problem parsing " + curr_file_path, 'e' );
@@ -112,7 +114,7 @@ Open file and call parse_line() on each line
 
 const string &file_name: full path of file
 *********************************************/
-int Parser::open_file( const string &file_name )
+int Parser::open_file( const string &full_file_path, const string &file_name )
 {
     int ret_val;
     int line_num = 1; // File line #'s start from 1
@@ -121,13 +123,13 @@ int Parser::open_file( const string &file_name )
 
     std::ifstream curr_file;
 
-    log_msg( "Opening file " + file_name, 'i' );
+    log_msg( "Opening file " + full_file_path, 'i' );
 
     /** Open file **/
-    curr_file.open( file_name.c_str() );
+    curr_file.open( full_file_path.c_str() );
     if( !curr_file.is_open() )
     {
-        log_msg( "Unable to open " + file_name, 'e');
+        log_msg( "Unable to open " + full_file_path, 'e');
         return FAIL;
     }
 
@@ -137,7 +139,7 @@ int Parser::open_file( const string &file_name )
         std::getline( curr_file, line ); // Get next line
 
         ln = boost::lexical_cast<string>( line_num ); // Convert int to string
-        log_msg( "Processing line " + ln + " of file " + file_name, 'i' );
+        log_msg( "Processing line " + ln + " of file " + full_file_path, 'i' );
 
         ret_val = parse_line( line ); // Call parser
         if( ret_val != OK )
@@ -145,16 +147,14 @@ int Parser::open_file( const string &file_name )
             log_msg( "Problem parsing line " + ln, 'e' );
         }
 
-        if( replacements.size() != 0 ) // If there are changes to make
+        // Write line to new file
+        ret_val = write_line( line, file_name );
+        if( ret_val != OK )
         {
-            ret_val = write_line( line, file_name );
-            if( ret_val != OK )
-            {
-                log_msg( "Problem writing line " + ln, 'e' );
-            }
-
-            replacements.clear(); // Empty the set for the next line
+            log_msg( "Problem writing line " + ln, 'e' );
         }
+
+        replacements.clear(); // Empty the set for the next line
 
         line_num++; // Increment line #
     }
@@ -162,7 +162,7 @@ int Parser::open_file( const string &file_name )
 
 
     /** Close file **/
-    log_msg( "Closing file " + file_name, 'i' );
+    log_msg( "Closing file " + full_file_path, 'i' );
     curr_file.close(); // close file
 
     return OK;
@@ -232,19 +232,29 @@ const string &file_name: name of file to write
 **********************************************************/
 int Parser::write_line( string &curr_line, const string &file_name )
 {
-    // Run backwards through the line so we don't have position change issues
-    for( int i = replacements.size()-1; i > -1; i-- )
+    // Open file
+    std::ofstream outFile;
+    string outPath = OUTPUT_LOCATION + file_name;
+    outFile.open( outPath, std::ofstream::app );
+
+    // If there are replacements, run backwards through the line so we don't have position change issues
+    for( int i = replacements.size()-1; i >= 0; i-- )
     {
         int length = replacements[i].end_pos - replacements[i].begin_pos; // Length of chars to change
 
-        //cout << "replacing from " << replacements[i].begin_pos << " with length " << length <<  " in file " << file_name << endl;
-        cout << endl << curr_line << endl;
-
-        curr_line.replace( replacements[i].begin_pos, length, replacements[i].value );
+        curr_line.replace( replacements[i].begin_pos, length, replacements[i].value ); // Perform replacement
     }
 
-    cout << curr_line << endl;
+    if( outFile.is_open() )
+    {
+        outFile << curr_line << endl; // Write out to file
 
+        outFile.close(); // close file
+    }
+    else
+    {
+        return FAIL; // couldn't open file
+    }
 
     return OK;
 }

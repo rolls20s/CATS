@@ -11,7 +11,7 @@ using std::cerr;
 // ToDo: Put into a config file or command arguments
 /** Static definitions ****************************/
 #define LOG_LOCATION "./cats.log"                   // Location of log file
-#define DEST_PATH "./"                              // Destination for files
+#define OUTPUT_LOCATION "./OUTPUT/"                 // Destination for files
 /**************************************************/
 
 
