@@ -23,12 +23,13 @@ module_dob::~module_dob()
 }
 
 /*********************************************************************************************
-Scans for numeric birthdays
+Scans for numeric birthdays w/fields separated by -, ., or /
+
 **********************************************************************************************/
 int module_dob::scan( string &curr_line, std::vector<replacement> &dob_repls )
 {
     /* Regular Expression to match */
-    boost::regex re("\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}\\b");
+    boost::regex re("\\b\\d{1,2}[-/\\.]\\d{1,2}[-/\\.]\\d{2,4}\\b");
 
     /* Iterators */
     boost::sregex_token_iterator it( curr_line.begin(), curr_line.end(), re, 0);
@@ -52,7 +53,3 @@ int module_dob::scan( string &curr_line, std::vector<replacement> &dob_repls )
 
     return OK;
 }
-
-
-
-
