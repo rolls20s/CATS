@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sys/stat.h>
 
 using std::cout;
 using std::endl;

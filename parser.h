@@ -1,4 +1,7 @@
 #include <dirent.h> // Read directories
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include <vector>
 #include <map>
 
@@ -19,7 +22,7 @@
 /***************************/
 
 #define OK 0
-#define FAIL -1;
+#define FAIL -1
 
 class Parser
 {
@@ -29,6 +32,8 @@ class Parser
 
     DIR *source_dir;
     struct dirent *entry;
+
+    //DIR *dest_dir;
 
     Parser( const string& );   // constructor
     ~Parser();  // destructor

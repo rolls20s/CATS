@@ -9,7 +9,6 @@ Parser::Parser( const string &s_p )
 {
     srand( time(NULL) ); // Generate seed for random gen
 
-
     /** Open directory **/
     source_path = s_p;
     source_dir = NULL;
@@ -56,8 +55,24 @@ int Parser::read_directory()
     int status;
     struct stat st_buf;
 
-    cout << "***** Begin debug output *****" << endl;
+    string dest_dir = string( OUTPUT_LOCATION );
 
+    // Check output location first
+    if( !opendir( OUTPUT_LOCATION ) )
+    {
+        log_msg( dest_dir  + " not found. Creating...", 'i' );
+        if( mkdir( OUTPUT_LOCATION, 0700 ) == 0 )
+        {
+            log_msg( "Successfully created " + dest_dir, 'i' );
+        }
+        else
+        {
+            log_msg( "Unable to create " + dest_dir, 'e' );
+            return FAIL;
+        }
+    }
+
+    // Get input data
     while( ( entry = readdir( source_dir ) ) != NULL )
     {
         string file_name = string( entry->d_name );
@@ -102,9 +117,6 @@ int Parser::read_directory()
             }
         }
     }
-
-    cout << "***** End debug output *****" << endl;
-
 
     return OK;
 }
@@ -235,7 +247,7 @@ int Parser::write_line( string &curr_line, const string &file_name )
     // Open file
     std::ofstream outFile;
     string outPath = OUTPUT_LOCATION + file_name;
-    outFile.open( outPath, std::ofstream::app );
+    outFile.open( outPath );//, std::ofstream::app );
 
     // If there are replacements, run backwards through the line so we don't have position change issues
     for( int i = replacements.size()-1; i >= 0; i-- )

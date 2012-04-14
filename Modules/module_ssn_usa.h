@@ -1,6 +1,6 @@
 
 #define OK 0
-#define FAIL -1;
+#define FAIL -1
 
 class module_ssn_usa
 {

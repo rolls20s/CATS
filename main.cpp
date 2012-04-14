@@ -22,9 +22,13 @@ int main( int arg_count, char *args[])
 
     log_msg( "Source path: " + source_path, 'i' );
 
-    /******* Process contents of sourse path ******/
+    /******* Process contents of source path ******/
     Parser myParser( source_path );
-    myParser.parse_data();
+    if( myParser.parse_data() != OK )
+    {
+        log_msg( "Problem parsing data", 'f' );
+        return FAIL;
+    }
     /**********************************************/
 
     return 0;
