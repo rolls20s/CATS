@@ -77,47 +77,6 @@ int module_ssn_usa::rand_ssn( string &format )
     stringstream obuffer; // Buffer for formatted ssn output
     stringstream ssnBuf;// Buffer for random ssn ( stringstream::in | stringstream::out );
 
-    /**************** Generate digits for ssn ***************/
-    // Area Number
-    int area_num = ( rand() % 898 ) + 1;
-    if( area_num < 100 )
-    {
-        ssnBuf << '0';
-
-        if( area_num < 10 )
-        {
-            ssnBuf << '0';
-        }
-    }
-    ssnBuf << area_num;
-
-    // Generate Group Number
-    int group_num = ( rand() % 98 ) + 1;
-    if( group_num < 10 )
-    {
-        ssnBuf << '0';
-    }
-    ssnBuf << group_num;
-
-    // Generate Serial Number
-    int ser_num = ( rand() % 9998 ) + 1;
-    if( ser_num < 1000 )
-    {
-        ssnBuf << '0';
-
-        if( ser_num < 100 )
-        {
-            ssnBuf << '0';
-
-            if( ser_num < 10 )
-            {
-                ssnBuf << '0';
-            }
-        }
-    }
-    ssnBuf << ser_num;
-    /********************************************************/
-
     /*** Check for existing ssn ***/
     for( unsigned int i = 0; i < format.length(); i++ )
     {
@@ -133,11 +92,50 @@ int module_ssn_usa::rand_ssn( string &format )
     }
     else
     {
+        /**************** Generate digits for ssn ***************/
+        // Area Number
+        int area_num = ( rand() % 898 ) + 1;
+        if( area_num < 100 )
+        {
+            ssnBuf << '0';
+
+            if( area_num < 10 )
+            {
+                ssnBuf << '0';
+            }
+        }
+        ssnBuf << area_num;
+
+        // Generate Group Number
+        int group_num = ( rand() % 98 ) + 1;
+        if( group_num < 10 )
+        {
+            ssnBuf << '0';
+        }
+        ssnBuf << group_num;
+
+        // Generate Serial Number
+        int ser_num = ( rand() % 9998 ) + 1;
+        if( ser_num < 1000 )
+        {
+            ssnBuf << '0';
+
+            if( ser_num < 100 )
+            {
+                ssnBuf << '0';
+
+                if( ser_num < 10 )
+                {
+                    ssnBuf << '0';
+                }
+            }
+        }
+        ssnBuf << ser_num;
+        /********************************************************/
+
         newSsnVal = ssnBuf.str();
         repl_map[oldSsn.str()] = ssnBuf.str();
     }
-
-    /******************************/
 
     int bufCount = 0; // Track position in new ssn
 
