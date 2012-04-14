@@ -58,7 +58,7 @@ int Parser::read_directory()
     string dest_dir = string( OUTPUT_LOCATION );
 
     // Check output location first
-    if( !opendir( OUTPUT_LOCATION ) )
+    if( !opendir( OUTPUT_LOCATION  ) )
     {
         log_msg( dest_dir  + " not found. Creating...", 'i' );
         if( mkdir( OUTPUT_LOCATION, 0700 ) == 0 )
@@ -134,16 +134,29 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
     string line; // Holds current line
 
     std::ifstream curr_file;
+    std::ifstream curr_outfile;
 
     log_msg( "Opening file " + full_file_path, 'i' );
 
-    /** Open file **/
+    /** Open Origin file **/
     curr_file.open( full_file_path.c_str() );
     if( !curr_file.is_open() )
     {
         log_msg( "Unable to open " + full_file_path, 'e');
         return FAIL;
     }
+    /**********************/
+
+
+    /** Clear old dest. file **/
+    curr_outfile.open( OUTPUT_LOCATION + file_name );
+    if( curr_outfile.is_open() )
+    {
+        curr_outfile.close();
+        unlink( file_name.c_str() );
+    }
+    /**************************/
+
 
     /***** Read file in by line *****/
     while( curr_file.good() )
@@ -244,10 +257,11 @@ const string &file_name: name of file to write
 **********************************************************/
 int Parser::write_line( string &curr_line, const string &file_name )
 {
-    // Open file
-    std::ofstream outFile;
+    // Output file path
     string outPath = OUTPUT_LOCATION + file_name;
 
+    // Open new file for writing
+    std::ofstream outFile;
     outFile.open( outPath, std::ofstream::app );
 
     // If there are replacements, run backwards through the line so we don't have position change issues
