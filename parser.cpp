@@ -247,7 +247,8 @@ int Parser::write_line( string &curr_line, const string &file_name )
     // Open file
     std::ofstream outFile;
     string outPath = OUTPUT_LOCATION + file_name;
-    outFile.open( outPath );//, std::ofstream::app );
+
+    outFile.open( outPath, std::ofstream::app );
 
     // If there are replacements, run backwards through the line so we don't have position change issues
     for( int i = replacements.size()-1; i >= 0; i-- )
