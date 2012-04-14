@@ -66,7 +66,8 @@ int module_ssn_usa::scan( string &curr_line, std::vector<replacement> &ssn_repls
 
 /***************************************************
 Replace numbers in the input string with a new
-random number.
+random number or, if the ssn has been seen before,
+replace it with the previously generated string.
 ****************************************************/
 int module_ssn_usa::rand_ssn( string &format )
 {
@@ -118,11 +119,11 @@ int module_ssn_usa::rand_ssn( string &format )
     /********************************************************/
 
     /*** Check for existing ssn ***/
-    for( unsigned int i = 0; i < repl_ssn.value.length(); i++ )
+    for( unsigned int i = 0; i < format.length(); i++ )
     {
-        if( isdigit( repl_ssn.value[i] ) )
+        if( isdigit( format[i] ) )
         {
-                oldSsn << repl_ssn.value[i];
+                oldSsn << format[i];
         }
     }
 
