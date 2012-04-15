@@ -13,6 +13,7 @@
 /***** Parsing Modules *****/
 #include "modules.h"
 
+#include "Modules/module_names_regionless.h" // Names - not region specific, best for "western" applications
 #include "Modules/module_ssn_usa.h"     // US Social Security Numbers
 #include "Modules/module_phone_usa.h"   // US Telephone Numbers
 #include "Modules/module_addr_usa.h"    // US Addresses

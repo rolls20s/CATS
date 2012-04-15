@@ -151,7 +151,6 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
 
     /** Clear old dest. file **/
     string old_dest_file = string( OUTPUT_LOCATION ) + file_name;
-    cout << old_dest_file << endl;
     curr_outfile.open( old_dest_file );
     if( curr_outfile.is_open() )
     {
