@@ -33,7 +33,7 @@ Scans for valid US Social Security Numbers
 Finds 9 digit numbers.  They can be contiguous, separated by '-', a separated by a single
 whitespace.  Cannot start with 666 or 900-999 and cannot contain all zeros in any section.
 
-ToDo: Make replacement value fit standard requirements
+ToDo: Make replacement value fit standard requirements (currently does not allow all zeros)
 **********************************************************************************************/
 int module_ssn_usa::scan( string &curr_line, std::vector<replacement> &ssn_repls )
 {

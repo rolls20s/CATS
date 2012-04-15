@@ -27,7 +27,7 @@ module_phone_usa::~module_phone_usa()
 /*********************************************************************************************
 Scans for valid US Telephone Numbers
 
-ToDo: make sure new value fits specification
+ToDo: make sure new value fits specification (currently does not allow all zeros)
 **********************************************************************************************/
 int module_phone_usa::scan( string &curr_line, std::vector<replacement> &phone_repls )
 {

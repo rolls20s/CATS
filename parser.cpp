@@ -133,10 +133,11 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
     string ln; // For converting line_num
     string line; // Holds current line
 
-    std::ifstream curr_file;
-    std::ifstream curr_outfile;
+    std::ifstream curr_file;    // Input file
+    std::ifstream curr_outfile; // Old output file
 
     log_msg( "Opening file " + full_file_path, 'i' );
+
 
     /** Open Origin file **/
     curr_file.open( full_file_path.c_str() );
@@ -149,11 +150,13 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
 
 
     /** Clear old dest. file **/
-    curr_outfile.open( OUTPUT_LOCATION + file_name );
+    string old_dest_file = string( OUTPUT_LOCATION ) + file_name;
+    cout << old_dest_file << endl;
+    curr_outfile.open( old_dest_file );
     if( curr_outfile.is_open() )
     {
         curr_outfile.close();
-        unlink( file_name.c_str() );
+        remove( old_dest_file.c_str() );
     }
     /**************************/
 
