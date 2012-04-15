@@ -221,6 +221,9 @@ int Parser::parse_line( string &curr_line )
             that tells the parser to discard the last n lines where n is
             the current step number.
     ***********************************************************************/
+    // Parse Names
+    module_names_regionless name_parser;
+    name_parser.scan( curr_line, replacements );
 
     // Parse US Social Security Numbers
     module_ssn_usa ssn_parser;
