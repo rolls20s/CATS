@@ -33,58 +33,48 @@ Scans for valid names
 **********************************************************************************************/
 int module_names_regionless::scan( string &curr_line, std::vector<replacement> &name_repls )
 {
-    // Iterators
+    // String Iterators
     std::string::const_iterator start = curr_line.begin();
     std::string::const_iterator end = curr_line.end();
 
-    boost::match_results<std::string::const_iterator> match;
-    boost::match_results<std::string::const_iterator> match2;
-
+    // Flags for regex_search()
     boost::match_flag_type flags = boost::match_default;
 
+    // Iterators for regex_search()
+    boost::match_results<std::string::const_iterator> match_first;  // Firstname matches
+    boost::match_results<std::string::const_iterator> match_last;   // Lastname matches
 
-    /****** FIRST NAME ***********************************************************************************/
-    // Regular Expression to match
-    boost::regex re_first( "first\\s*name:?\\s?(is)?\\s?([a-z\\']*)", boost::regex::icase );
+    // Regular Expressions for regex_search()
+    boost::regex re_first( "first\\s*name:?\\s?(is)?\\s?([a-z\\']*)", boost::regex::icase );                // Firstname
+    boost::regex re_last( "((last\\s*name)|(surname)):?\\s?(is)?\\s?([a-z\\'\\-]*)", boost::regex::icase ); // Surname
 
-    // Get matches
-    if( boost::regex_search( start, end, match, re_first, flags ) )
+
+    /****** FIRST NAME *********************************************************************/
+    if( boost::regex_search( start, end, match_first, re_first, flags ) )
     {
-        /*
-        repl_name.begin_pos = it->first - curr_line.begin();
-        repl_name.end_pos = it->second - curr_line.begin();
-        repl_name.value = *it;
+        repl_name.begin_pos = match_first[2].first - start; // Start position in line
+        repl_name.end_pos = match_first[2].second - start;  // End position in line
+        repl_name.value = "test1";                          // New value
 
-        rand_name( repl_ssn.value ); // Replace value
+        name_repls.push_back( repl_name ); // Add to the list of replacements in this line
 
-        ssn_repls.push_back( repl_ssn ); // Add to the list of replacements in this line
-*/
-        cout << match[2] << endl;
-
+        //cout << match_first[2] << endl;
     }
-    /******************************************************************************************************/
+    /***************************************************************************************/
 
 
-    /****** LAST NAME ********************************************************************************************/
-
-    // Regular Expression to match
-    boost::regex re_last( "((last\\s*name)|(surname)):?\\s?(is)?\\s?([a-z\\'\\-]*)", boost::regex::icase );
-
-    // Get matches
-    if( boost::regex_search( start, end, match2, re_last, flags ) )
+    /****** LAST NAME **********************************************************************/
+    if( boost::regex_search( start, end, match_last, re_last, flags ) )
     {
-        /*
-        repl_name.begin_pos = it->first - curr_line.begin();
-        repl_name.end_pos = it->second - curr_line.begin();
-        repl_name.value = *it;
+        repl_name.begin_pos = match_last[5].first - start;  // Start
+        repl_name.end_pos = match_last[5].second - start;   // End
+        repl_name.value = "test2";                          // New value
 
-        rand_name( repl_ssn.value ); // Replace value
+        name_repls.push_back( repl_name ); // Add to the list of replacements in this line
 
-        ssn_repls.push_back( repl_ssn ); // Add to the list of replacements in this line
-*/
-        cout << match2[5] << endl;
+        //cout << match_last[5] << endl;
     }
-    /*************************************************************************************************************/
+    /***************************************************************************************/
 
 
     return OK;
