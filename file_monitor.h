@@ -3,6 +3,9 @@ Monitors a directory of files for changes and passes
 files to parser functions.
 *****************************************************/
 
+#ifndef _FILE_MON
+#define _FILE_MON
+
 #include <sys/inotify.h>
 
 /* Up to 512 concurrent events */
@@ -43,7 +46,6 @@ void process_event( int fd, string target )
             action = target;
         }
 
-
         // Created/Modified
         if( new_event->mask &IN_CREATE )
             action += " created in watched directory";
@@ -66,3 +68,5 @@ void process_event( int fd, string target )
     }
 
 }
+
+#endif

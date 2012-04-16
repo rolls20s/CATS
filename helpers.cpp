@@ -1,3 +1,6 @@
+#ifndef _HELP_CPP
+#define _HELP_CPP
+
 /** For get_args() ************************/
 #include <boost/program_options.hpp>
 namespace opts = boost::program_options;
@@ -140,3 +143,5 @@ int get_args( int arg_count, char *args[], string &source_path )
 
     return 0;
 }
+
+#endif
