@@ -90,7 +90,7 @@ boost::program_options library.
 char* args[]:  Set of arguments
 int arg_count: Number of arguments
 ************************************/
-int get_args( int arg_count, char *args[], string &source_path )
+int get_args( int arg_count, char *args[], string &source_path, string &dest_path )
 {
     try
     {
@@ -103,6 +103,7 @@ int get_args( int arg_count, char *args[], string &source_path )
 
             ( "source", opts::value<string>(), "Set location of source files" )
 
+            ( "dest", opts::value<string>(), "Set location of parsed files")
         ;
         /********************************************************************/
 
@@ -111,21 +112,39 @@ int get_args( int arg_count, char *args[], string &source_path )
         opts::notify(vm);
 
         /******************** PROCESS CUSTOM OPTIONS HERE *********************/
+
+        // Help
         if( vm.count( "help" ) )
         {
-            cout << desc << endl;
+            cout << desc << endl; // Output help
             return -1;
         }
+
+        // Source
         if( vm.count( "source" ) )
         {
             source_path = vm["source"].as<string>(); // Return source path
         }
         else // A source is required.
         {
-            cout << "No source specified.\n";
+            cout << "No source specified." << endl;
             log_msg( "No source specified.", 'f' );
             return 2;
         }
+
+        // Destination
+        if( vm.count( "dest" ) )
+        {
+            dest_path = vm["dest"].as<string>(); // Return destination path
+        }
+        else // A destination is required
+        {
+            cout << "No destination specified." << endl;
+            log_msg( "No destination specified.", 'f' );
+            return 3;
+
+        }
+
         /***********************************************************************/
 
     }

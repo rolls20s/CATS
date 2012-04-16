@@ -10,7 +10,7 @@ files to parser functions.
 /* Up to 512 concurrent events */
 #define BUFF_SIZE ( 512 * ( sizeof( struct inotify_event ) + FILENAME_MAX ) )
 
-void process_event( int fd, string target, Parser &myParser )
+void process_event( int fd, string target, string &output_location, Parser &myParser )
 {
     string event_desc;
 
@@ -48,7 +48,7 @@ void process_event( int fd, string target, Parser &myParser )
         }
 
         // Full path of output file
-        string out_path = string( OUTPUT_LOCATION ) + file_name;
+        string out_path = output_location + file_name;
 
         // File Created
         if( ( new_event->mask &IN_CREATE ) || ( new_event->mask &IN_MOVED_TO ) )

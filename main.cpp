@@ -11,9 +11,10 @@ int main( int arg_count, char *args[])
 
     int err_code = 0;
     string source_path; // Holds path to source data
+    string dest_path;   // Holds path to destination
 
     /******* Process command-line arguments ****************/
-    err_code = get_args( arg_count, args, source_path );
+    err_code = get_args( arg_count, args, source_path, dest_path );
 
     if( err_code != 0 )
     {
@@ -22,9 +23,10 @@ int main( int arg_count, char *args[])
     /*******************************************************/
 
     log_msg( "Source path: " + source_path, 'i' );
+    log_msg( "Destination path: " + dest_path, 'i' );
 
     /******* Process existing contents of source path ******/
-    Parser myParser( source_path );
+    Parser myParser( source_path, dest_path );
     if( myParser.parse_data() != OK )
     {
         log_msg( "Problem parsing data", 'f' );
@@ -79,7 +81,7 @@ int main( int arg_count, char *args[])
         else if( FD_ISSET( fd, &rfds ) )
         {
             // Get event
-            process_event( fd, source_path, myParser );
+            process_event( fd, source_path, dest_path, myParser );
         }
         else if( FD_ISSET( fileno( stdin ), &rfds ) )
         {
