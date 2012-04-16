@@ -37,6 +37,7 @@ void process_event( int fd, string target, Parser &myParser )
         struct inotify_event *new_event = ( struct inotify_event * )&buf[i];
         string file_name;
 
+        // Get file name
         if( new_event->len )
         {
             file_name = new_event->name;
@@ -46,26 +47,31 @@ void process_event( int fd, string target, Parser &myParser )
             file_name = "";
         }
 
+        // Full path of output file
         string out_path = string( OUTPUT_LOCATION ) + file_name;
 
-
-        // Created/Modified
-        if( ( new_event->mask &IN_CREATE ) || ( new_event->mask &IN_MOVED_TO ) || ( new_event->mask &IN_MODIFY ) )
+        // File Created
+        if( ( new_event->mask &IN_CREATE ) || ( new_event->mask &IN_MOVED_TO ) )
         {
+            log_msg( "New file, " + file_name + ", detected. Parsing...", 'i' );
             myParser.open_file( target + file_name, file_name );
-            event_desc = out_path + " created or modified.";
+        }
+
+        // Modified
+        if( new_event->mask &IN_MODIFY )
+        {
+            log_msg( "File, " + file_name + ", modified. Re-parsing...", 'i' );
+            myParser.open_file( target + file_name, file_name );
         }
 
         // Deleted/Moved
         if( ( new_event->mask &IN_MOVED_FROM ) || ( new_event->mask &IN_DELETE_SELF ) || ( new_event->mask &IN_DELETE ) )
         {
             remove( out_path.c_str() );
-            event_desc = out_path + " removed.";
+            log_msg( out_path + " removed", 'i' );
         }
 
-        // Log activity
-        log_msg( event_desc, 'i');
-
+        // Iterate
         i += ( sizeof( struct inotify_event ) + new_event->len );
     }
 

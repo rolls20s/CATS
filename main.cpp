@@ -4,6 +4,8 @@
 
 int main( int arg_count, char *args[])
 {
+    string user_input;
+
     /** Initialize log **/
     init_log();
 
@@ -59,22 +61,33 @@ int main( int arg_count, char *args[])
         time.tv_usec = 0;
 
         /* zero-out the fd_set */
-        FD_ZERO (&rfds);
+        FD_ZERO( &rfds );
+
+        FD_SET( fileno( stdin ), &rfds );
 
         // Add inotify fd to the fd_set
-        FD_SET (fd, &rfds);
+        FD_SET( fd, &rfds );
+
 
         // Select() fd's
-        ret = select (fd + 1, &rfds, NULL, NULL, &time);
-        if (ret < 0)
+        ret = select( fd + 1, &rfds, NULL, NULL, &time );
+        if( ret < 0 )
         {
                 // Something wrong
                 perror ("select");
         }
-        else if (FD_ISSET (fd, &rfds) )
+        else if( FD_ISSET( fd, &rfds ) )
         {
             // Get event
             process_event( fd, source_path, myParser );
+        }
+        else if( FD_ISSET( fileno( stdin ), &rfds ) )
+        {
+            std::cin >> user_input;
+            if( user_input == "q" )
+            {
+                break;
+            }
         }
         else
         {
@@ -85,6 +98,7 @@ int main( int arg_count, char *args[])
     close( fd ); // Shutdown inotify
     /********************************************************/
 
+    log_msg( "Exiting...", 'i' );
 
     return 0;
 }
