@@ -153,7 +153,7 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
     if( curr_outfile.is_open() )
     {
         curr_outfile.close();
-        remove( old_dest_file.c_str() );
+        remove( old_dest_file.c_str() ); // Delete file
     }
     /**************************/
 

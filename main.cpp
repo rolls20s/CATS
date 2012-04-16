@@ -1,7 +1,5 @@
 #include "main.h"
-#include "helpers.cpp"
-#include "file_monitor.h"
-#include "parser.h"
+
 
 
 int main( int arg_count, char *args[])
@@ -76,7 +74,7 @@ int main( int arg_count, char *args[])
         else if (FD_ISSET (fd, &rfds) )
         {
             // Get event
-            process_event( fd, source_path );
+            process_event( fd, source_path, myParser );
         }
         else
         {

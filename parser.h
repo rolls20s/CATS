@@ -39,13 +39,13 @@ class Parser
     Parser( const string& );   // constructor
     ~Parser();  // destructor
     int parse_data(); // Inital call to start things rolling
+    int open_file( const string&, const string& ); // Iterate through lines in a file
 
   private:
 
     std::vector<replacement> replacements; // Init replacement set
 
     int read_directory(); // Iterate through files in a directory
-    int open_file( const string&, const string& ); // Iterate through lines in a file
     int parse_line( string& ); // Call modules to scan each line and return a stucture containing the changes to make
     int write_line( string&, const string& ); // Modify the line based on the structure and write it out to a new file
 };
