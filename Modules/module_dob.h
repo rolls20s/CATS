@@ -29,27 +29,20 @@ Scans for numeric birthdays w/fields separated by -, ., or /
 int module_dob::scan( string &curr_line, std::vector<replacement> &dob_repls )
 {
     /* Regular Expression to match */
-    boost::regex re("\\b\\d{1,2}[-/\\.]\\d{1,2}[-/\\.]\\d{2,4}\\b");
+    boost::regex re("\\b(\\d{1,2})[-/\\.](\\d{1,2})[-/\\.](\\d{2,4})\\b");
 
-    /* Iterators */
-    boost::sregex_token_iterator it( curr_line.begin(), curr_line.end(), re, 0);
-    boost::sregex_token_iterator end;
-
-    unsigned count = 0; // Track matches
 
     /* Do matching */
-    while( it != end )
+   /* if( boost::regex_search( start, end, match, re, flags ) )
     {
-        repl_dob.begin_pos = it->first - curr_line.begin();
-        repl_dob.end_pos = it->second - curr_line.begin();
+        repl_name.begin_pos = match[2].first - start; // Start position in line
+        repl_name.end_pos = match[2].second - start;  // End position in line
+        repl_name.value = "test1";                          // New value
 
-        repl_dob.value = "test";// Replacement value
-
-        it++;// increment iterator
-        count++;
+        name_repls.push_back( repl_name ); // Add to the list of replacements in this line
 
         dob_repls.push_back( repl_dob );
     }
-
+*/
     return OK;
 }

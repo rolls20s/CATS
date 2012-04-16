@@ -29,26 +29,26 @@ class Parser
 {
   public:
 
-    string source_path;
-
     DIR *source_dir;
     struct dirent *entry;
 
     //DIR *dest_dir;
 
-    Parser( const string& );   // constructor
+    Parser( const string&, const string& );   // constructor
     ~Parser();  // destructor
     int parse_data(); // Inital call to start things rolling
+    int open_file( const string&, const string& ); // Iterate through lines in a file
 
   private:
+
+    string source_path;
+    string output_location;
 
     std::vector<replacement> replacements; // Init replacement set
 
     int read_directory(); // Iterate through files in a directory
-    int open_file( const string&, const string& ); // Iterate through lines in a file
     int parse_line( string& ); // Call modules to scan each line and return a stucture containing the changes to make
     int write_line( string&, const string& ); // Modify the line based on the structure and write it out to a new file
 };
 
-
-
+#include "parser.cpp"

@@ -13,9 +13,8 @@ class module_names_regionless
 
   private:
 
-    replacement repl_name;
-
     int rand_name( string&, char& );
+    void push_name( boost::sregex_iterator&, const int&, string&, const string&, std::vector<replacement>& );
 };
 
 module_names_regionless::module_names_regionless()
@@ -29,56 +28,72 @@ module_names_regionless::~module_names_regionless()
 }
 
 /*********************************************************************************************
-Scans for valid names
+Scans for valid names and repaces them with new ones
+
+ToDo: middle names/initials, whole names.
 **********************************************************************************************/
 int module_names_regionless::scan( string &curr_line, std::vector<replacement> &name_repls )
 {
-    // String Iterators
-    std::string::const_iterator start = curr_line.begin();
-    std::string::const_iterator end = curr_line.end();
 
-    // Flags for regex_search()
-    boost::match_flag_type flags = boost::match_default;
+    /******************** Regular Expressions for regex_search() ********************/
+    boost::regex re_first(
+                            // First name
+                            "(first\\s*name:?\\s?(is)?\\s?([a-z\\']*))"
 
-    // Iterators for regex_search()
-    boost::match_results<std::string::const_iterator> match_first;  // Firstname matches
-    boost::match_results<std::string::const_iterator> match_last;   // Lastname matches
+                            // Last name
+                            "|(((last\\s*name)|(surname)):?\\s?(is)?\\s?([a-z\\'\\-]*))"
 
-    // Regular Expressions for regex_search()
-    boost::regex re_first( "first\\s*name:?\\s?(is)?\\s?([a-z\\']*)", boost::regex::icase );                // Firstname
-    boost::regex re_last( "((last\\s*name)|(surname)):?\\s?(is)?\\s?([a-z\\'\\-]*)", boost::regex::icase ); // Surname
+                            // Not case sensitive
+                            , boost::regex::icase
+    );
+    /*********************************************************************************/
+
+    // Indexes to wanted matches
+    int fn_match = 3;
+    int ln_match = 9;
+
+    // Iterative search
+    boost::sregex_iterator it( curr_line.begin(), curr_line.end(), re_first );
+    boost::sregex_iterator end;
 
 
-    /****** FIRST NAME *********************************************************************/
-    if( boost::regex_search( start, end, match_first, re_first, flags ) )
+    /****** Replace Names *********************************************************************/
+    while( it != end )
     {
-        repl_name.begin_pos = match_first[2].first - start; // Start position in line
-        repl_name.end_pos = match_first[2].second - start;  // End position in line
-        repl_name.value = "test1";                          // New value
+        if( (*it)[fn_match] != "" )
+        {
+            push_name( it, fn_match, curr_line, "test", name_repls );
+        }
 
-        name_repls.push_back( repl_name ); // Add to the list of replacements in this line
+        if( (*it)[ln_match] != "" )
+        {
+            push_name( it, ln_match, curr_line, "test2", name_repls );
+        }
 
-        //cout << match_first[2] << endl;
+        it++;
     }
     /***************************************************************************************/
-
-
-    /****** LAST NAME **********************************************************************/
-    if( boost::regex_search( start, end, match_last, re_last, flags ) )
-    {
-        repl_name.begin_pos = match_last[5].first - start;  // Start
-        repl_name.end_pos = match_last[5].second - start;   // End
-        repl_name.value = "test2";                          // New value
-
-        name_repls.push_back( repl_name ); // Add to the list of replacements in this line
-
-        //cout << match_last[5] << endl;
-    }
-    /***************************************************************************************/
-
 
     return OK;
 }
+
+
+/************************************
+Pushes names on to the repl. tracker
+*************************************/
+void module_names_regionless::push_name( boost::sregex_iterator &it, const int &index, string &curr_line, const string &new_value, std::vector<replacement> &name_repls )
+{
+    replacement repl_name; // Holds current replacement
+
+    repl_name.begin_pos = (*it)[index].first - curr_line.begin(); // Start position in line
+    repl_name.end_pos   = (*it)[index].second - curr_line.begin();  // End position in line
+
+    // New value to write
+    repl_name.value = new_value;
+
+    name_repls.push_back( repl_name ); // Add to the list of replacements in this line
+}
+
 
 int module_names_regionless::rand_name( string &curr_name, char &name_type )
 {

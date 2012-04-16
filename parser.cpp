@@ -1,16 +1,15 @@
-#include "parser.h"
-
 /************************************
 Opens source directory
 
 const string s_p: path to source data
 *************************************/
-Parser::Parser( const string &s_p )
+Parser::Parser( const string &s_p, const string &d_p )
 {
     srand( time(NULL) ); // Generate seed for random gen
 
     /** Open directory **/
     source_path = s_p;
+    output_location = d_p;
     source_dir = NULL;
     entry = NULL;
 
@@ -55,13 +54,13 @@ int Parser::read_directory()
     int status;
     struct stat st_buf;
 
-    string dest_dir = string( OUTPUT_LOCATION );
+    string dest_dir = output_location;
 
     // Check output location first
-    if( !opendir( OUTPUT_LOCATION  ) )
+    if( !opendir( output_location.c_str()  ) )
     {
         log_msg( dest_dir  + " not found. Creating...", 'i' );
-        if( mkdir( OUTPUT_LOCATION, 0700 ) == 0 )
+        if( mkdir( output_location.c_str(), 0700 ) == 0 )
         {
             log_msg( "Successfully created " + dest_dir, 'i' );
         }
@@ -150,12 +149,12 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
 
 
     /** Clear old dest. file **/
-    string old_dest_file = string( OUTPUT_LOCATION ) + file_name;
+    string old_dest_file = output_location + file_name;
     curr_outfile.open( old_dest_file );
     if( curr_outfile.is_open() )
     {
         curr_outfile.close();
-        remove( old_dest_file.c_str() );
+        remove( old_dest_file.c_str() ); // Delete file
     }
     /**************************/
 
@@ -263,7 +262,7 @@ const string &file_name: name of file to write
 int Parser::write_line( string &curr_line, const string &file_name )
 {
     // Output file path
-    string outPath = OUTPUT_LOCATION + file_name;
+    string outPath = output_location + file_name;
 
     // Open new file for writing
     std::ofstream outFile;

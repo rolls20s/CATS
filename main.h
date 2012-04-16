@@ -1,34 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <errno.h>
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::cerr;
 
-// ToDo: Put into a config file or command arguments
+// ToDo: Put into a config file and command argument
 /** Static definitions ****************************/
 #define LOG_LOCATION "./cats.log"                   // Location of log file
-#define OUTPUT_LOCATION "./OUTPUT/"                 // Destination for files
 /**************************************************/
 
-
-/* Prototypes */
-/******************************************************
-Output to log.
-
-string log_message: Contains message log
-
-char log_type: Identifies type of message:
-
-            i - information
-            e - error
-            f - fatal error
-******************************************************/
-void log_msg( const std::string&, const char& );
-
-
-
-
-
+#include "helpers.cpp"
+#include "parser.h"
+#include "file_monitor.h"
