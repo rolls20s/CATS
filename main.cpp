@@ -34,6 +34,8 @@ int main( int arg_count, char *args[])
     }
     /*******************************************************/
 
+    cout << "q[RETURN] to quit" << endl;
+
     /******* Monitor source path for changes ***************/
     int fd = inotify_init();
     if( fd < 0 )

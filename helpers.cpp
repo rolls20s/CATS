@@ -82,6 +82,27 @@ void log_msg( const string &log_message, const char &log_type )
 }
 
 
+/********************************
+Get config info from config file
+*********************************/
+void read_config_file( const string c_f, string &s_p, string &d_p )
+{
+    std::ifstream configfile;
+
+    configfile.open( c_f ); // open file
+
+    if( configfile.is_open() )
+    {
+        /* ToDo: Get config info */
+
+        configfile.close(); // close file
+    }
+    else
+    {
+        cerr << "Problem opening config file.\n";
+        exit(1);
+    }
+}
 
 /************************************
 Parse the command line using the
@@ -101,9 +122,14 @@ int get_args( int arg_count, char *args[], string &source_path, string &dest_pat
 
             ( "help", "Show this help message" )
 
+            //( "configfile", opts::value<string>(), "Path to config file (Optional)")
+
             ( "source", opts::value<string>(), "Set location of source files" )
 
             ( "dest", opts::value<string>(), "Set location of parsed files")
+
+            //( "logfile", opts::value<string>(), "Path to log file" )
+
         ;
         /********************************************************************/
 
@@ -120,31 +146,37 @@ int get_args( int arg_count, char *args[], string &source_path, string &dest_pat
             return -1;
         }
 
-        // Source
-        if( vm.count( "source" ) )
+        if( vm.count( "configfile" ) )
         {
-            source_path = vm["source"].as<string>(); // Return source path
+            const string config_file = vm["configfile"].as<string>(); // Get file path
+            read_config_file( config_file, source_path, dest_path );
         }
-        else // A source is required.
+        else // No config file
         {
-            cout << "No source specified." << endl;
-            log_msg( "No source specified.", 'f' );
-            return 2;
-        }
+            // Source
+            if( vm.count( "source" ) )
+            {
+                source_path = vm["source"].as<string>(); // Return source path
+            }
+            else // A source is required.
+            {
+                cout << "No source specified." << endl;
+                log_msg( "No source specified.", 'f' );
+                return 2;
+            }
 
-        // Destination
-        if( vm.count( "dest" ) )
-        {
-            dest_path = vm["dest"].as<string>(); // Return destination path
+            // Destination
+            if( vm.count( "dest" ) )
+            {
+                dest_path = vm["dest"].as<string>(); // Return destination path
+            }
+            else // A destination is required
+            {
+                cout << "No destination specified." << endl;
+                log_msg( "No destination specified.", 'f' );
+                return 2;
+            }
         }
-        else // A destination is required
-        {
-            cout << "No destination specified." << endl;
-            log_msg( "No destination specified.", 'f' );
-            return 3;
-
-        }
-
         /***********************************************************************/
 
     }

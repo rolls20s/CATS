@@ -8,10 +8,9 @@ using std::endl;
 using std::string;
 using std::cerr;
 
-// ToDo: Put into a config file or command arguments
+// ToDo: Put into a config file and command argument
 /** Static definitions ****************************/
 #define LOG_LOCATION "./cats.log"                   // Location of log file
-//#define OUTPUT_LOCATION "./OUTPUT/"                 // Destination for files
 /**************************************************/
 
 #include "helpers.cpp"
