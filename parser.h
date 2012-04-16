@@ -50,5 +50,4 @@ class Parser
     int write_line( string&, const string& ); // Modify the line based on the structure and write it out to a new file
 };
 
-
-
+#include "parser.cpp"

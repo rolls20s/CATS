@@ -28,7 +28,9 @@ module_names_regionless::~module_names_regionless()
 }
 
 /*********************************************************************************************
-Scans for valid names
+Scans for valid names and repaces them with new ones
+
+ToDo: middle names/initials, whole names.
 **********************************************************************************************/
 int module_names_regionless::scan( string &curr_line, std::vector<replacement> &name_repls )
 {
@@ -58,7 +60,6 @@ int module_names_regionless::scan( string &curr_line, std::vector<replacement> &
     /****** Replace Names *********************************************************************/
     while( it != end )
     {
-
         if( (*it)[fn_match] != "" )
         {
             push_name( it, fn_match, curr_line, "test", name_repls );

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <errno.h>
 
 using std::cout;
 using std::endl;
