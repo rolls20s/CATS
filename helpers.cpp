@@ -51,10 +51,12 @@ void log_msg( const string &log_message, const char &log_type )
         if( log_type == 'i' ) // Info
         {
             logfile << "Info: ";
+            cout << "Info: ";
         }
         else if ( ( log_type == 'e') || ( log_type == 'f') ) // Error
         {
             logfile << "Error: ";
+            cout << "Error: ";
         }
         else // Wrong log_type
         {
@@ -63,14 +65,17 @@ void log_msg( const string &log_message, const char &log_type )
 
         /* Write out message to file */
         logfile << log_message;
+        cout << log_message;
 
         if ( log_type == 'f') // Fatal error, add "exiting."
         {
             logfile << " Info: Exiting.\n";
+            cout << "Info: Exiting.\n";
         }
         else
         {
             logfile << endl;
+            cout << endl;
         }
 
         logfile.close(); // close file

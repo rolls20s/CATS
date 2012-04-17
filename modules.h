@@ -19,11 +19,11 @@ struct replacement
 
 /***************************/
 // module_email.h
-#define DOMAIN_LIST "domains"
+#define DOMAIN_LIST "resources/domains"
 
 // module_names_regionless.h
-#define FN_FILE "firstnames"
-#define LN_FILE "lastnames"
+#define FN_FILE "resources/firstnames"
+#define LN_FILE "resources/lastnames"
 /***************************/
 
 using std::stringstream;
