@@ -1,6 +1,6 @@
 //#include <fstream>
 
-#define DOMAIN_LIST "lc_nodup_email_domains.txt"
+#define DOMAIN_LIST "domains"
 
 class module_email
 {
@@ -68,7 +68,9 @@ int module_email::scan( string &curr_line, std::vector<replacement> &email_repls
         repl_email.begin_pos = it->first - curr_line.begin();
         repl_email.end_pos = it->second - curr_line.begin();
 
-        repl_email.value = "test";// Replacement value
+        repl_email.value = *it;// Replacement value
+
+        rand_email( repl_email.value );
 
         it++;// increment iterator
         count++;

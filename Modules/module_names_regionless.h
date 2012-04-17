@@ -40,6 +40,9 @@ int module_names_regionless::scan( string &curr_line, std::vector<replacement> &
                             // First name
                             "(first\\s*name:?\\s?(is)?\\s?([a-z\\']*))"
 
+                            // Middle name/Initial
+                            //"()"
+
                             // Last name
                             "|(((last\\s*name)|(surname)):?\\s?(is)?\\s?([a-z\\'\\-]*))"
 
