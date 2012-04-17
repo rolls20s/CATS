@@ -1,7 +1,3 @@
-//#include <fstream>
-
-#define DOMAIN_LIST "domains"
-
 class module_email
 {
   public:

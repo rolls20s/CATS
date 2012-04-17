@@ -32,17 +32,6 @@ int module_dob::scan( string &curr_line, std::vector<replacement> &dob_repls )
     boost::regex re("\\b(\\d{1,2})[-/\\.](\\d{1,2})[-/\\.](\\d{2,4})\\b");
 
 
-    /* Do matching */
-   /* if( boost::regex_search( start, end, match, re, flags ) )
-    {
-        repl_name.begin_pos = match[2].first - start; // Start position in line
-        repl_name.end_pos = match[2].second - start;  // End position in line
-        repl_name.value = "test1";                          // New value
 
-        name_repls.push_back( repl_name ); // Add to the list of replacements in this line
-
-        dob_repls.push_back( repl_dob );
-    }
-*/
     return OK;
 }

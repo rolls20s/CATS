@@ -1,10 +1,3 @@
-#define FN_FILE "firstnames"
-#define LN_FILE "lastnames"
-
-
-#define OK 0
-#define FAIL -1
-
 class module_names_regionless
 {
   public:

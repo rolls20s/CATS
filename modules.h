@@ -2,6 +2,9 @@
 #include <cstdlib>
 #include <time.h>
 
+#define OK 0
+#define FAIL -1
+
 std::map<string, string> repl_map; // Keeps consistent replacements
 
 /*** Structure for replacement data *********/
@@ -13,6 +16,15 @@ struct replacement
     string value;   // replacement value
 };
 /********************************************/
+
+/***************************/
+// module_email.h
+#define DOMAIN_LIST "domains"
+
+// module_names_regionless.h
+#define FN_FILE "firstnames"
+#define LN_FILE "lastnames"
+/***************************/
 
 using std::stringstream;
 
