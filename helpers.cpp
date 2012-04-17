@@ -46,17 +46,22 @@ void log_msg( const string &log_message, const char &log_type )
 
     logfile.open( LOG_LOCATION, std::ofstream::app ); // open file
 
+    // ToDo: fix so interactive mode doesn't require log to be open.
     if( logfile.is_open() )
     {
         if( log_type == 'i' ) // Info
         {
             logfile << "Info: ";
-            cout << "Info: ";
+
+            if(INTERACTIVE)
+                cout << "Info: ";
         }
         else if ( ( log_type == 'e') || ( log_type == 'f') ) // Error
         {
             logfile << "Error: ";
-            cout << "Error: ";
+
+            if(INTERACTIVE)
+                cout << "Error: ";
         }
         else // Wrong log_type
         {
@@ -65,17 +70,23 @@ void log_msg( const string &log_message, const char &log_type )
 
         /* Write out message to file */
         logfile << log_message;
-        cout << log_message;
+
+        if(INTERACTIVE)
+            cout << log_message;
 
         if ( log_type == 'f') // Fatal error, add "exiting."
         {
             logfile << " Info: Exiting.\n";
-            cout << "Info: Exiting.\n";
+
+            if(INTERACTIVE)
+                cout << "Info: Exiting.\n";
         }
         else
         {
             logfile << endl;
-            cout << endl;
+
+            if(INTERACTIVE)
+                cout << endl;
         }
 
         logfile.close(); // close file
@@ -127,6 +138,7 @@ int get_args( int arg_count, char *args[], string &source_path, string &dest_pat
 
             ( "help", "Show this help message" )
 
+            ( "inter", "Interactive mode" )
             //( "configfile", opts::value<string>(), "Path to config file (Optional)")
 
             ( "source", opts::value<string>(), "Set location of source files" )
@@ -151,6 +163,11 @@ int get_args( int arg_count, char *args[], string &source_path, string &dest_pat
             return -1;
         }
 
+        if( vm.count( "inter" ) )
+        {
+            INTERACTIVE = true;
+            cout << "*** Running in interactive mode. ****" << endl;
+        }
         if( vm.count( "configfile" ) )
         {
             const string config_file = vm["configfile"].as<string>(); // Get file path

@@ -13,6 +13,8 @@ using std::cerr;
 #define LOG_LOCATION "./cats.log"                   // Location of log file
 /**************************************************/
 
+bool INTERACTIVE = false;
+
 #include "helpers.cpp"
 #include "parser.h"
 #include "file_monitor.h"

@@ -1,4 +1,5 @@
 #include "main.h"
+#include <termios.h>
 
 
 
@@ -51,14 +52,45 @@ int main( int arg_count, char *args[])
         // log_msg( "Problem monitoring directory: " + strerror(errno), 'f' );
         return 1;
     }
+    else
+    {
+        log_msg( "Initial processing complete. Now monitoring directory: " + source_path, 'i' );
+    }
     /*******************************************************/
+
+
+    /********* Set terminal options *********/
+    struct termios ttystate, ttysave;
+
+    if(INTERACTIVE)
+    {
+        // Get the terminal state
+        tcgetattr(STDIN_FILENO, &ttystate);
+        ttysave = ttystate;
+        // Turn off canonical mode and echo
+        ttystate.c_lflag &= ~(ICANON | ECHO);
+
+        // Minimum input.
+        ttystate.c_cc[VMIN] = 1;
+
+        // Set the terminal attributes.
+        tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
+    }
+    /****************************************/
+
 
     /********** Get changes from file descriptor ***********/
     struct timeval time;
     fd_set rfds;
     int ret;
 
-    while(1)
+    if(INTERACTIVE)
+    {
+        cout << "\'q\' to quit> "; // give prompt
+        fflush( stdout );
+    }
+
+    while( 1 )
     {
         /* timeout after five seconds */
         time.tv_sec = 5;
@@ -67,11 +99,11 @@ int main( int arg_count, char *args[])
         /* zero-out the fd_set */
         FD_ZERO( &rfds );
 
-        FD_SET( fileno( stdin ), &rfds );
+        if(INTERACTIVE)
+            FD_SET( fileno( stdin ), &rfds );
 
         // Add inotify fd to the fd_set
         FD_SET( fd, &rfds );
-
 
         // Select() fd's
         ret = select( fd + 1, &rfds, NULL, NULL, &time );
@@ -82,15 +114,26 @@ int main( int arg_count, char *args[])
         }
         else if( FD_ISSET( fd, &rfds ) )
         {
+            if(INTERACTIVE)
+                cout << endl; // Drop below the prompt.
+
             // Get event
             process_event( fd, source_path, dest_path, myParser );
+
+            if(INTERACTIVE)
+            {
+                cout << "\'q\' to quit> "; // reprompt
+                fflush( stdout );
+            }
         }
         else if( FD_ISSET( fileno( stdin ), &rfds ) )
         {
-            std::cin >> user_input;
-            if( user_input == "q" )
+            if(INTERACTIVE)
             {
-                break;
+                int c = fgetc( stdin ); // get char
+
+                if( c == 'q' ) // quit
+                    break;
             }
         }
         else
@@ -101,6 +144,13 @@ int main( int arg_count, char *args[])
 
     close( fd ); // Shutdown inotify
     /********************************************************/
+
+    // Set the terminal attributes.
+    if(INTERACTIVE)
+    {
+        ttystate.c_lflag |= ICANON | ECHO;
+        tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
+    }
 
     log_msg( "Exiting...", 'i' );
 
