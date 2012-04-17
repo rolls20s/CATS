@@ -1,4 +1,4 @@
-#include <fstream>
+//#include <fstream>
 
 #define DOMAIN_LIST "lc_nodup_email_domains.txt"
 
@@ -15,16 +15,16 @@ class module_email
 
     replacement repl_email;
     std::vector<string> email_domains;
-    int rand_email( &string );
+    int rand_email( string& );
 };
 
 module_email::module_email()
 {
-    fstream fin;
+    std::ifstream fin;
     string domain;
 
     fin.open( DOMAIN_LIST );
-    
+
     while( !fin.is_open() )
     {
         string file;
@@ -38,9 +38,9 @@ module_email::module_email()
     while( fin.peek() == EOF )
     {
         fin >> domain;
-        email_domains.push_back( domain );   
+        email_domains.push_back( domain );
     }
-    
+
 }
 
 module_email::~module_email()
@@ -68,7 +68,10 @@ int module_email::scan( string &curr_line, std::vector<replacement> &email_repls
         repl_email.begin_pos = it->first - curr_line.begin();
         repl_email.end_pos = it->second - curr_line.begin();
 
-        repl_email.value = "test";// Replacement value
+        repl_email.value = *it;// Replacement value
+
+        rand_email( repl_email.value );
+
 
         it++;// increment iterator
         count++;
@@ -79,8 +82,10 @@ int module_email::scan( string &curr_line, std::vector<replacement> &email_repls
     return OK;
 }
 
-int module::rand_email( string &format )
+int module_email::rand_email( string &format )
 {
+    string newEmailVal;
+
     string newDomain; // Holds the new domain
 
     stringstream emailAcct; // Buffer for current read email
@@ -109,7 +114,7 @@ int module::rand_email( string &format )
         /**************** Generate new email addr ***************/
 
         newDomain = email_domains[ rand() % email_domains.size()];
-        
+
         for( unsigned int i = 0; i < emailAcct.str().length(); ++i)
         {
             if( rand() % 2)
@@ -121,7 +126,7 @@ int module::rand_email( string &format )
                 emailBuf << (char) (rand() % 26) + 97;
             }
         }
-        
+
         emailBuf << newDomain;
 
         /********************************************************/

@@ -35,8 +35,6 @@ int module_ccn::scan( string &curr_line, std::vector<replacement> &ccn_repls )
     boost::sregex_token_iterator it( curr_line.begin(), curr_line.end(), re, 0 );
     boost::sregex_token_iterator end;
 
-    unsigned count = 0; // Track matches
-
     /* Do matching */
     while( it != end )
     {
@@ -49,7 +47,6 @@ int module_ccn::scan( string &curr_line, std::vector<replacement> &ccn_repls )
         ccn_repls.push_back( repl_ccn );
 
         it++;// increment iterator
-        count++;
     }
 
     return OK;
