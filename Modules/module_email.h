@@ -1,4 +1,4 @@
-#include <fstream>
+//#include <fstream>
 
 #define DOMAIN_LIST "lc_nodup_email_domains.txt"
 
@@ -15,12 +15,12 @@ class module_email
 
     replacement repl_email;
     std::vector<string> email_domains;
-    int rand_email( &string );
+    int rand_email( string& );
 };
 
 module_email::module_email()
 {
-    fstream fin;
+    std::ifstream fin;
     string domain;
 
     fin.open( DOMAIN_LIST );
@@ -79,8 +79,9 @@ int module_email::scan( string &curr_line, std::vector<replacement> &email_repls
     return OK;
 }
 
-int module::rand_email( string &format )
+int module_email::rand_email( string &format )
 {
+    string newEmailVal;
     string newDomain; // Holds the new domain
 
     stringstream emailAcct; // Buffer for current read email
