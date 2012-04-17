@@ -15,3 +15,8 @@ struct replacement
 /********************************************/
 
 using std::stringstream;
+
+
+// Declared here so we don't reload for every name replacement
+std::vector<string> fn_list; // Holds first/middle names
+std::vector<string> ln_list; // Holds last names
