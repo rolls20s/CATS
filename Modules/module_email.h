@@ -35,7 +35,7 @@ module_email::module_email()
         fin.open(file.c_str());
     }
 
-    while( fin.peek() == EOF )
+    while( fin.peek() != EOF )
     {
         fin >> domain;
         email_domains.push_back( domain );
@@ -111,17 +111,19 @@ int module_email::rand_email( string &format )
     {
         /**************** Generate new email addr ***************/
 
+        // ToDo: generate from username list or char stats
+
         newDomain = email_domains[ rand() % email_domains.size()];
 
-        for( unsigned int i = 0; i < emailAcct.str().length(); ++i)
+        for( unsigned int i = 0; i < emailAcct.str().length(); ++i )
         {
-            if( rand() % 2)
+            if( rand() % 2 )
             {
-                emailBuf << (char) (rand() % 26) + 65;
+                emailBuf << (char)((rand() % 26) + 65);
             }
             else
             {
-                emailBuf << (char) (rand() % 26) + 97;
+                emailBuf << (char)((rand() % 26) + 97);
             }
         }
 
