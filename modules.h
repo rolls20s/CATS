@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <time.h>
 
+using std::stringstream;
+
 #define OK 0
 #define FAIL -1
 
@@ -26,9 +28,11 @@ struct replacement
 #define LN_FILE "resources/lastnames"
 /***************************/
 
-using std::stringstream;
-
-
+/***************************/
 // Declared here so we don't reload for every name replacement
 std::vector<string> fn_list; // Holds first/middle names
 std::vector<string> ln_list; // Holds last names
+
+// Ditto for emails
+std::vector<string> email_domains;
+/***************************/

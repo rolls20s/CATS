@@ -10,33 +10,36 @@ class module_email
   private:
 
     replacement repl_email;
-    std::vector<string> email_domains;
     int rand_email( string& );
 };
 
 module_email::module_email()
 {
-    std::ifstream fin;
-    string domain;
-
-    fin.open( DOMAIN_LIST );
-
-    while( !fin.is_open() )
+    if( email_domains.empty() )
     {
-        string file;
-        std::cout << "!! module_email::module_email() !!\n\tERROR OPENING EMAIL DOMAIN LIST\n";
-        std::cout << "PLEASE ENTER DOMAIN LIST FILE NAME: ";
-        std::cin >> file;
-        fin.clear();
-        fin.open(file.c_str());
-    }
+        std::ifstream fin;
+        string domain;
 
-    while( fin.peek() != EOF )
-    {
-        fin >> domain;
-        email_domains.push_back( domain );
-    }
+        fin.open( DOMAIN_LIST );
 
+        // Needs log msg and graceful handling
+    /*
+        while( !fin.is_open() )
+        {
+            string file;
+            std::cout << "!! module_email::module_email() !!\n\tERROR OPENING EMAIL DOMAIN LIST\n";
+            std::cout << "PLEASE ENTER DOMAIN LIST FILE NAME: ";
+            std::cin >> file;
+            fin.clear();
+            fin.open(file.c_str());
+        }
+    */
+        while( fin.peek() != EOF )
+        {
+            fin >> domain;
+            email_domains.push_back( domain );
+        }
+    }
 }
 
 module_email::~module_email()
