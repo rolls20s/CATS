@@ -1,3 +1,7 @@
+#include <fstream>
+
+#define DOMAIN_LIST "lc_nodup_email_domains.txt"
+
 class module_email
 {
   public:
@@ -10,11 +14,33 @@ class module_email
   private:
 
     replacement repl_email;
+    std::vector<string> email_domains;
+    int rand_email( &string );
 };
 
 module_email::module_email()
 {
+    fstream fin;
+    string domain;
 
+    fin.open( DOMAIN_LIST );
+    
+    while( !fin.is_open() )
+    {
+        string file;
+        std::cout << "!! module_email::module_email() !!\n\tERROR OPENING EMAIL DOMAIN LIST\n";
+        std::cout << "PLEASE ENTER DOMAIN LIST FILE NAME: ";
+        std::cin >> file;
+        fin.clear();
+        fin.open(file.c_str());
+    }
+
+    while( fin.peek() == EOF )
+    {
+        fin >> domain;
+        email_domains.push_back( domain );   
+    }
+    
 }
 
 module_email::~module_email()
@@ -53,7 +79,62 @@ int module_email::scan( string &curr_line, std::vector<replacement> &email_repls
     return OK;
 }
 
+int module::rand_email( string &format )
+{
+    string newDomain; // Holds the new domain
 
+    stringstream emailAcct; // Buffer for current read email
+    stringstream emailBuf;// Buffer for random email ( stringstream::in | stringstream::out );
+
+    /*** Check for existing ssn ***/
+
+    for( unsigned int i = 0; i < format.length(); i++ )
+    {
+        if( format[i] != '@' )
+        {
+            emailAcct << format[i];
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if( repl_map.count( format ) )
+    {
+        newEmailVal = repl_map[ format ];
+    }
+    else
+    {
+        /**************** Generate new email addr ***************/
+
+        newDomain = email_domains[ rand() % email_domains.size()];
+        
+        for( unsigned int i = 0; i < emailAcct.str().length(); ++i)
+        {
+            if( rand() % 2)
+            {
+                emailBuf << (char) (rand() % 26) + 65;
+            }
+            else
+            {
+                emailBuf << (char) (rand() % 26) + 97;
+            }
+        }
+        
+        emailBuf << newDomain;
+
+        /********************************************************/
+
+        newEmailVal = emailBuf.str();
+        repl_map[ format ] = emailBuf.str();
+    }
+
+    format = newEmailVal;
+
+    return OK;
+
+}
 
 
 
