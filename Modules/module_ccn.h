@@ -43,14 +43,13 @@ int module_ccn::scan( string &curr_line, std::vector<replacement> &ccn_repls )
         repl_ccn.begin_pos = it->first - curr_line.begin();
         repl_ccn.end_pos = it->second - curr_line.begin();
 
+        repl_ccn.value = *it;
+        rand_ccn( repl_ccn.value );
 
-        // TODO FIXME
-        repl_ccn.value = "test";
+        ccn_repls.push_back( repl_ccn );
 
         it++;// increment iterator
         count++;
-
-        ccn_repls.push_back( repl_ccn );
     }
 
     return OK;
@@ -143,17 +142,17 @@ int module_ccn::rand_ccn( string &format )
                     digitsToGen = 12;
                     break;
             }
-            break; 
+            break;
     }
 
     for( int i = 0; i < digitsToGen; ++i)
     {
         ccnBuf << (rand() % 10);
-    }   
- 
+    }
+
     /********************************************************/
 
-    /*** Check for existing ccn ***/ 
+    /*** Check for existing ccn ***/
 
     if( repl_map.count( oldCcn.str() ) )
     {
