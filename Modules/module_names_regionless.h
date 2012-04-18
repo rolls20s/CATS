@@ -46,7 +46,7 @@ Scans for valid names and repaces them with new ones
 int module_names_regionless::scan( string &curr_line, std::vector<replacement> &name_repls )
 {
 
-    /****************************** Regular Expressions for regex_search() ******************************/
+    /****************************** Regular Expressions for  regex search ********************************/
     boost::regex re_first(
                             // First name
                             "(first\\s*name:?\\s*(is)?\\s?([a-z\\']*))"

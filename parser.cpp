@@ -3,45 +3,46 @@ Opens source directory
 
 const string s_p: path to source data
 *************************************/
-Parser::Parser( const string &s_p, const string &d_p )
+Parser::Parser( const string &source_path, const string &dest_path )
 {
     srand( time(NULL) ); // Generate seed for random gen
 
-    /** Open directory **/
-    source_path = s_p;
-    output_location = d_p;
-    source_dir = NULL;
-    entry = NULL;
+    log_msg( "Source path: " + source_path, 'i' );
+    log_msg( "Destination path: " + dest_path, 'i' );
+}
 
-    log_msg( "Opening directory " + string( source_path ), 'i' );
+// Destructor
+Parser::~Parser()
+{
+    // Close dir
+    log_msg( "Closing directory " + string( S_path ), 'i' );
+    closedir( S_path_d );
+}
 
-    source_dir = opendir( source_path.c_str() );
+/******************************************
+Begin the parsing process and return status
+*******************************************/
+int Parser::parse_data( const string &source_path, const string &output_location )
+{
+    int ret_val = FAIL;
 
+    log_msg( "Opening directory " + source_path, 'i' );
+
+    DIR *source_dir = opendir( source_path.c_str() );
     if( source_dir == NULL )
     {
         perror("Problem opening source directory");
         log_msg( "Problem opening source directory", 'e' );
         exit( 1 );
     }
-}
+    else
+    {
+        ret_val = read_directory( output_location, source_dir, source_path );
+    }
 
-// Destructor
-Parser::~Parser()
-{
-    log_msg( "Closing directory " + string( source_path ), 'i' );
-    closedir( source_dir );
-    source_dir = NULL;
-    entry = NULL;
-}
-
-/******************************************
-Begin the parsing process and return status
-*******************************************/
-int Parser::parse_data()
-{
-    int ret_val = FAIL;
-
-    ret_val = read_directory();
+    // For destructor
+    S_path = source_path;
+    S_path_d = source_dir;
 
     return ret_val;
 }
@@ -49,11 +50,14 @@ int Parser::parse_data()
 /****************************************
 Read in files and call file open function
 *****************************************/
-int Parser::read_directory()
+int Parser::read_directory( const string &output_location, DIR* &source_dir, const string &dir_name )
 {
     int status;
     struct stat st_buf;
 
+    /** Open directory **/
+    struct dirent *entry; // File entry
+    entry = NULL;
     string dest_dir = output_location;
 
     // Check output location first
@@ -81,7 +85,7 @@ int Parser::read_directory()
             /***** Differentiate directories and files *****/
             status = FAIL;
 
-            string curr_file_path = source_path + file_name;
+            string curr_file_path = dir_name + file_name;
 
             status = stat( curr_file_path.c_str(), &st_buf );
             if( status != OK )
@@ -92,11 +96,18 @@ int Parser::read_directory()
             }
             /***********************************************/
 
-            if( S_ISDIR( st_buf.st_mode ) ) // If entry is a directory
+            if( S_ISDIR( st_buf.st_mode ) )                             // If entry is a subdirectory
             {
                 log_msg( "Found directory: " + curr_file_path, 'i' );
+                string new_dir = output_location + file_name + "/";
+                mkdir( new_dir.c_str(), 0700 );                         // Create new subdirectory
 
-                // ToDo: descend into directories and facilitate replication of directory tree in output.
+                log_msg( "Created directory: " + new_dir, 'i' );
+
+                parse_data( curr_file_path + "/", new_dir );                        // Read subdirectory
+
+
+                // ToDo: recursively descend into directories and facilitate replication of directory tree in output.
             }
             else // Entry is a file
             {
@@ -107,7 +118,7 @@ int Parser::read_directory()
                 /****** Parse  file ***********************************/
                 int ret_val = FAIL;
 
-                ret_val = open_file( curr_file_path, file_name );
+                ret_val = open_file( curr_file_path, file_name, output_location );
                 if( ret_val != OK )
                 {
                     log_msg( "Problem parsing " + curr_file_path, 'e' );
@@ -117,6 +128,7 @@ int Parser::read_directory()
         }
     }
 
+
     return OK;
 }
 
@@ -125,7 +137,7 @@ Open file and call parse_line() on each line
 
 const string &file_name: full path of file
 *********************************************/
-int Parser::open_file( const string &full_file_path, const string &file_name )
+int Parser::open_file( const string &full_file_path, const string &file_name, const string &output_location )
 {
     int ret_val;
     int line_num = 1; // File line #'s start from 1
@@ -174,7 +186,7 @@ int Parser::open_file( const string &full_file_path, const string &file_name )
         }
 
         // Write line to new file
-        ret_val = write_line( line, file_name );
+        ret_val = write_line( line, file_name, output_location );
         if( ret_val != OK )
         {
             log_msg( "Problem writing line " + ln, 'e' );
@@ -268,7 +280,7 @@ writes it out to a new file.
 const string &curr_line: line of data that will be changed
 const string &file_name: name of file to write
 **********************************************************/
-int Parser::write_line( string &curr_line, const string &file_name )
+int Parser::write_line( string &curr_line, const string &file_name, const string &output_location )
 {
     // Output file path
     string outPath = output_location + file_name;

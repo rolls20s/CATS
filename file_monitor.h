@@ -12,6 +12,11 @@ files to parser functions.
 
 void process_event( int fd, string target, string &output_location, Parser &myParser )
 {
+    // Is target a directory?
+//    DIR *source_dir;
+//    struct dirent *entry;
+
+
     string event_desc;
 
     ssize_t len, i = 0;
@@ -54,14 +59,14 @@ void process_event( int fd, string target, string &output_location, Parser &myPa
         if( ( new_event->mask &IN_CREATE ) || ( new_event->mask &IN_MOVED_TO ) )
         {
             log_msg( "New file, " + file_name + ", detected. Parsing...", 'i' );
-            myParser.open_file( target + file_name, file_name );
+            myParser.open_file( target + file_name, file_name, output_location );
         }
 
         // Modified
         if( new_event->mask &IN_MODIFY )
         {
             log_msg( "File, " + file_name + ", modified. Re-parsing...", 'i' );
-            myParser.open_file( target + file_name, file_name );
+            myParser.open_file( target + file_name, file_name, output_location );
         }
 
         // Deleted/Moved
