@@ -12,11 +12,6 @@ files to parser functions.
 
 void process_event( int fd, string target, string &output_location, Parser &myParser )
 {
-    // Is target a directory?
-//    DIR *source_dir;
-//    struct dirent *entry;
-
-
     string event_desc;
 
     ssize_t len, i = 0;
@@ -52,14 +47,34 @@ void process_event( int fd, string target, string &output_location, Parser &myPa
             file_name = "";
         }
 
+
         // Full path of output file
         string out_path = output_location + file_name;
 
         // File Created
         if( ( new_event->mask &IN_CREATE ) || ( new_event->mask &IN_MOVED_TO ) )
         {
-            log_msg( "New file, " + file_name + ", detected. Parsing...", 'i' );
-            myParser.open_file( target + file_name, file_name, output_location );
+            string in_path = target + file_name;
+
+            // New Directory?
+            struct stat st_buf;
+            stat( in_path.c_str(), &st_buf );
+
+            if( S_ISDIR( st_buf.st_mode ) )                             // If entry is a subdirectory
+            {
+                log_msg( "New directory detected: " + in_path, 'i' );
+                mkdir( out_path.c_str(), 0700 );                         // Create new subdirectory
+
+                log_msg( "Created directory: " + out_path, 'i' );
+
+                // ToDo: add watch fd to select to watch this new directory
+
+            }
+            else
+            {
+                log_msg( "New file, " + file_name + ", detected. Parsing...", 'i' );
+                myParser.open_file( target + file_name, file_name, output_location );
+            }
         }
 
         // Modified

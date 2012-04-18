@@ -58,6 +58,7 @@ int Parser::read_directory( const string &output_location, DIR* &source_dir, con
     /** Open directory **/
     struct dirent *entry; // File entry
     entry = NULL;
+
     string dest_dir = output_location;
 
     // Check output location first
@@ -94,8 +95,6 @@ int Parser::read_directory( const string &output_location, DIR* &source_dir, con
                 log_msg( "Problem getting file status", 'e' );
                 return FAIL;
             }
-            /***********************************************/
-
             if( S_ISDIR( st_buf.st_mode ) )                             // If entry is a subdirectory
             {
                 log_msg( "Found directory: " + curr_file_path, 'i' );
@@ -107,6 +106,7 @@ int Parser::read_directory( const string &output_location, DIR* &source_dir, con
                 parse_data( curr_file_path + "/", new_dir );                        // Read subdirectory
 
             }
+            /***********************************************/
             else // Entry is a file
             {
                 /*** Check file type *********************************/
@@ -121,8 +121,16 @@ int Parser::read_directory( const string &output_location, DIR* &source_dir, con
 
                 if( strcmp( extension, "txt" ) != 0 )
                 {
-                    log_msg( "Found unsupported file: " + file_name + " Skipping.", 'w' );
-                    continue;
+                    log_msg( "Found unsupported file: " + file_name + " Not processing.", 'w' );
+
+                    // Copy file as-is
+                    std::ifstream in( curr_file_path );
+                    std::ofstream out( output_location + file_name );
+                    out << in.rdbuf();
+                    out.close();
+                    in.close();
+
+                    continue; // Skip processing
                 }
                 /******************************************************/
 
