@@ -106,14 +106,26 @@ int Parser::read_directory( const string &output_location, DIR* &source_dir, con
 
                 parse_data( curr_file_path + "/", new_dir );                        // Read subdirectory
 
-
-                // ToDo: recursively descend into directories and facilitate replication of directory tree in output.
             }
             else // Entry is a file
             {
+                /*** Check file type *********************************/
+                char extension[3];
+                int ext_index = 0;
 
+                for( unsigned int i = file_name.length() - 3; i < file_name.length(); i++ )
+                {
+                    extension[ext_index] = file_name[i];
+                    ext_index++;
+                }
 
-                // ToDo: Pass over unsupported file types
+                if( strcmp( extension, "txt" ) != 0 )
+                {
+                    log_msg( "Found unsupported file: " + file_name + " Skipping.", 'w' );
+                    continue;
+                }
+                /******************************************************/
+
 
                 /****** Parse  file ***********************************/
                 int ret_val = FAIL;

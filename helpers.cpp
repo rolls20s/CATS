@@ -56,6 +56,13 @@ void log_msg( const string &log_message, const char &log_type )
             if(INTERACTIVE)
                 cout << "Info: ";
         }
+        else if( log_type == 'w' ) // Info
+        {
+            logfile << "Warning: ";
+
+            if(INTERACTIVE)
+                cout << "Warning: ";
+        }
         else if ( ( log_type == 'e') || ( log_type == 'f') ) // Error
         {
             logfile << "Error: ";
