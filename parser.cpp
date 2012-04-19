@@ -121,7 +121,7 @@ int Parser::read_directory( const string &output_location, DIR* &source_dir, con
 
                 if( strcmp( extension, "txt" ) != 0 )
                 {
-                    log_msg( "Found unsupported file: " + file_name + " Not processing.", 'w' );
+ //                   log_msg( "Found unsupported file: " + file_name + " Not processing.", 'w' );
 
                     // Copy file as-is
                     std::ifstream in( curr_file_path );

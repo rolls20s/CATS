@@ -42,7 +42,7 @@ int main( int arg_count, char *args[])
     if( fd < 0 )
     {
         // log_msg( "Problem monitoring directory: " + strerror(errno), 'f' );
-        return 1;
+        return FAIL;
     }
 
     // Watch the source directory
@@ -50,14 +50,13 @@ int main( int arg_count, char *args[])
     if( wd < 0 )
     {
         // log_msg( "Problem monitoring directory: " + strerror(errno), 'f' );
-        return 1;
+        return FAIL;
     }
     else
     {
         log_msg( "Initial processing complete. Now monitoring directory: " + source_path, 'i' );
     }
     /*******************************************************/
-
 
     /********* Set terminal options *********/
     struct termios ttystate, ttysave;
@@ -118,7 +117,7 @@ int main( int arg_count, char *args[])
                 cout << endl; // Drop below the prompt.
 
             // Get event
-            process_event( fd, source_path, dest_path, myParser );
+            process_event( fd, source_path, dest_path, myParser, false );
 
             if(INTERACTIVE)
             {

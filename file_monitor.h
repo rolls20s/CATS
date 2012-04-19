@@ -10,7 +10,7 @@ files to parser functions.
 /* Up to 512 concurrent events */
 #define BUFF_SIZE ( 512 * ( sizeof( struct inotify_event ) + FILENAME_MAX ) )
 
-void process_event( int fd, string target, string &output_location, Parser &myParser )
+void process_event( int fd, string target, string &output_location, Parser &myParser, bool rev_flag )
 {
     string event_desc;
 
@@ -70,6 +70,15 @@ void process_event( int fd, string target, string &output_location, Parser &myPa
                 // ToDo: add watch fd to select to watch this new directory
 
             }
+           /* else if( rev_flag )
+            {
+                // Copy file as-is
+                std::ifstream in( in_path );
+                std::ofstream out( output_location + file_name );
+                out << in.rdbuf();
+                out.close();
+                in.close();
+            }*/
             else
             {
                 log_msg( "New file, " + file_name + ", detected. Parsing...", 'i' );
