@@ -5,7 +5,9 @@ CATS* is a simple proof-of-concept application, designed to demonstrate a method
 Compiling:
 - Requires Boost libraries (https://www.boost.org) (initially developed with with Boost 1.4x).
 - After cloning, run:
+
 $ cd CATS/
+
 $ make
 
 After compiling, run "cats --help" for usage info.
