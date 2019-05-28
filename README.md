@@ -24,7 +24,7 @@ Todo/future ideas:
 - MIME Type matching rather than just text. (Possible application for steganographic tagging?)
 - Data identifcation is regex based. Possible application for machine learning?
 
-* Wrote this quite a while ago. Don't remember what the acronym meant :-).
+*Wrote this quite a while ago. Don't remember what the acronym meant :-).
 
 
 
