@@ -1,4 +1,4 @@
-#CATS Readme
+# CATS Readme
 
 CATS* is a simple proof-of-concept application, designed to demonstrate a methodology for replacing sensitive form data with semantically equivalent data, assuming triggers from a HIDS or other threat detection tool, for the purposes of simultaneous data protection and counter-intelligence/threat-actor tracking.
 
